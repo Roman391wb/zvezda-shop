@@ -1,0 +1,5 @@
+# Critical paths require the repository ADMIN before a protected-main merge.
+/.github/ @Roman391wb
+/apps/web/public/admin/ @Roman391wb
+/apps/web/scripts/ @Roman391wb
+/content/settings.json @Roman391wb
