@@ -12,6 +12,17 @@ apps/web/out
 apps/web/.env.local
 apps/web/public/admin/config.yml
 debug.log
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.pem
+*.key
+*.p12
+*.pfx
+docker-data/
+docker-volumes/
+volumes/
 __pycache__
 .pytest_cache
 .mypy_cache
