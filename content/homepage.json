@@ -1,0 +1,87 @@
+{
+  "sections": [
+    {
+      "key": "hero",
+      "enabled": true,
+      "sort_order": 0,
+      "status": "published",
+      "content": {
+        "title": "Коллекция ждёт своего образа",
+        "eyebrow": "Новая глава",
+        "cta_href": "/catalog",
+        "subtitle": "Выберите силуэт, который говорит за вас.",
+        "cta_label": "Смотреть коллекцию"
+      }
+    },
+    {
+      "key": "categories",
+      "enabled": true,
+      "sort_order": 1,
+      "status": "published",
+      "content": {
+        "title": "Категории",
+        "eyebrow": "Выбор"
+      }
+    },
+    {
+      "key": "new",
+      "enabled": true,
+      "sort_order": 2,
+      "status": "published",
+      "content": {
+        "title": "Новинки",
+        "eyebrow": "Свежий взгляд",
+        "cta_href": "/catalog?sort=newest",
+        "cta_label": "Все новинки"
+      }
+    },
+    {
+      "key": "featured",
+      "enabled": true,
+      "sort_order": 3,
+      "status": "published",
+      "content": {
+        "title": "Хиты",
+        "eyebrow": "Избранное",
+        "cta_href": "/catalog",
+        "cta_label": "Смотреть каталог"
+      }
+    },
+    {
+      "key": "promo",
+      "enabled": true,
+      "sort_order": 4,
+      "status": "published",
+      "content": {
+        "title": "Ваш следующий образ начинается здесь",
+        "eyebrow": "Для вас"
+      }
+    },
+    {
+      "key": "benefits",
+      "enabled": true,
+      "sort_order": 5,
+      "status": "published",
+      "content": {
+        "items": [
+          {
+            "text": "",
+            "title": "Доставка"
+          },
+          {
+            "text": "",
+            "title": "Возврат"
+          },
+          {
+            "text": "",
+            "title": "Оплата"
+          },
+          {
+            "text": "",
+            "title": "Поддержка"
+          }
+        ]
+      }
+    }
+  ]
+}

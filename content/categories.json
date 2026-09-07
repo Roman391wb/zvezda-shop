@@ -1,0 +1,44 @@
+{
+  "categories": [
+    {
+      "name": "Женское",
+      "slug": "zhenskoe",
+      "description": "Одежда для выразительных и тихих моментов",
+      "media_url": null,
+      "sort_order": 0,
+      "is_visible": true
+    },
+    {
+      "name": "Платья",
+      "slug": "platya",
+      "description": "Выразительные силуэты для особенных и тихих повседневных моментов",
+      "media_url": null,
+      "sort_order": 1,
+      "is_visible": true
+    },
+    {
+      "name": "Костюмы",
+      "slug": "kostyumy",
+      "description": "Точные линии и мягкая архитектура",
+      "media_url": null,
+      "sort_order": 2,
+      "is_visible": true
+    },
+    {
+      "name": "Платки",
+      "slug": "platki",
+      "description": "Финальные штрихи образа",
+      "media_url": null,
+      "sort_order": 3,
+      "is_visible": true
+    },
+    {
+      "name": "Верхняя одежда",
+      "slug": "verkhnyaya-odezhda",
+      "description": "Сдержанные формы для прохладного сезона",
+      "media_url": null,
+      "sort_order": 4,
+      "is_visible": true
+    }
+  ]
+}

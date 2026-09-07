@@ -1,0 +1,7 @@
+# Copy this file to .github/CODEOWNERS and replace @YOUR_GITHUB_USERNAME.
+# Then protect main: require pull requests and code-owner review.
+# MODERATOR changes are made as CMS pull requests; only ADMIN may approve these paths.
+/content/settings.json @YOUR_GITHUB_USERNAME
+/.github/ @YOUR_GITHUB_USERNAME
+/apps/web/public/admin/ @YOUR_GITHUB_USERNAME
+/apps/web/scripts/ @YOUR_GITHUB_USERNAME

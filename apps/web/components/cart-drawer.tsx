@@ -3,7 +3,7 @@
 import Image from "next/image";
 import {useState} from "react";
 import {X} from "@phosphor-icons/react";
-import {rub} from "@/lib/api";
+import {rub,storeSettings} from "@/lib/api";
 import {useStore} from "./store-provider";
 
 export function CartDrawer(){
@@ -11,8 +11,8 @@ export function CartDrawer(){
   const total=store.cart.reduce((sum,item)=>sum+item.product.price*item.quantity,0);
   const checkout=()=>{
     setError("");
-    const number=(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER||process.env.NEXT_PUBLIC_STORE_WHATSAPP_NUMBER||"").replace(/\D/g,"");
-    if(!number){setError("WhatsApp магазина пока не настроен. Укажите NEXT_PUBLIC_WHATSAPP_NUMBER перед static deployment.");return}
+    const number=(storeSettings.whatsapp||"").replace(/\D/g,"");
+    if(!number){setError("WhatsApp магазина пока не настроен. Укажите номер в content/settings.json через CMS.");return}
     const lines=store.cart.map((item,index)=>{
       const options=Object.entries(item.options).filter(([,value])=>value).map(([key,value])=>`${key==="size"?"Размер":key==="color"?"Цвет":key}: ${value}`).join("\n");
       return `${index+1}. ${item.product.name}\n${options}\nКоличество: ${item.quantity}\nЦена: ${rub(item.product.price*item.quantity)}`;

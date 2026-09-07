@@ -1,0 +1,36 @@
+{
+  "collections": [
+    {
+      "name": "Новинки",
+      "slug": "novinki",
+      "description": null,
+      "media_url": null,
+      "sort_order": 0,
+      "is_visible": true
+    },
+    {
+      "name": "Популярное",
+      "slug": "populyarnoe",
+      "description": null,
+      "media_url": null,
+      "sort_order": 1,
+      "is_visible": true
+    },
+    {
+      "name": "Новая коллекция",
+      "slug": "novaya-kollektsiya",
+      "description": null,
+      "media_url": null,
+      "sort_order": 2,
+      "is_visible": true
+    },
+    {
+      "name": "Распродажа",
+      "slug": "rasprodazha",
+      "description": null,
+      "media_url": null,
+      "sort_order": 3,
+      "is_visible": true
+    }
+  ]
+}

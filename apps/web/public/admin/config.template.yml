@@ -1,0 +1,153 @@
+backend:
+  name: github
+  repo: __GITHUB_REPOSITORY__
+  branch: main
+  base_url: __CMS_AUTH_BASE_URL__
+  auth_endpoint: auth
+publish_mode: editorial_workflow
+media_folder: apps/web/public/uploads
+public_folder: /uploads
+locale: ru
+editor:
+  preview: false
+collections:
+  - name: products
+    label: Товары
+    files:
+      - name: products
+        label: Все товары
+        file: content/products.json
+        format: json
+        fields:
+          - name: products
+            label: Товары
+            widget: list
+            summary: "{{fields.name}} — {{fields.status}}"
+            fields:
+              - {name: id, label: ID, widget: uuid}
+              - {name: name, label: Название}
+              - {name: slug, label: URL-slug, hint: "Латиница, дефисы; уникален"}
+              - {name: status, label: Публикация, widget: select, options: [published, draft], default: draft}
+              - {name: sort_order, label: Порядок, widget: number, value_type: int, min: 0, default: 0}
+              - {name: short_description, label: Краткое описание, widget: text}
+              - {name: description, label: Полное описание, widget: text, required: false}
+              - {name: category, label: Категория}
+              - {name: category_slug, label: Slug категории}
+              - {name: collections, label: Коллекции, widget: list, required: false, field: {name: value, label: Slug коллекции}}
+              - {name: price, label: Цена в копейках, widget: number, value_type: int, min: 0}
+              - {name: compare_at_price, label: Старая цена в копейках, widget: number, value_type: int, min: 0, required: false}
+              - {name: currency, label: Валюта, default: RUB}
+              - {name: is_new, label: Новинка, widget: boolean, default: false}
+              - {name: is_featured, label: Хит, widget: boolean, default: false}
+              - name: media
+                label: Фотографии
+                widget: list
+                fields:
+                  - {name: id, label: ID, widget: uuid}
+                  - {name: type, label: Тип, widget: hidden, default: image}
+                  - {name: url, label: Изображение, widget: image}
+                  - {name: alt_text, label: Alt-текст, required: false}
+                  - {name: sort_order, label: Порядок, widget: number, value_type: int, min: 0, default: 0}
+                  - {name: is_primary, label: Главное фото, widget: boolean, default: false}
+                  - {name: is_secondary, label: Второе фото, widget: boolean, default: false}
+                  - {name: variant_id, label: Variant ID, required: false}
+              - name: variants
+                label: Варианты, размеры и остаток
+                widget: list
+                fields:
+                  - {name: id, label: ID, widget: uuid}
+                  - {name: sku, label: SKU}
+                  - name: options
+                    label: Параметры
+                    widget: object
+                    fields:
+                      - {name: size, label: Размер}
+                      - {name: color, label: Цвет}
+                  - {name: stock_quantity, label: Остаток, widget: number, value_type: int, min: 0, default: 0}
+                  - {name: is_active, label: Активен, widget: boolean, default: true}
+  - name: categories
+    label: Категории
+    files:
+      - name: categories
+        label: Категории
+        file: content/categories.json
+        format: json
+        fields:
+          - name: categories
+            label: Категории
+            widget: list
+            fields:
+              - {name: name, label: Название}
+              - {name: slug, label: Slug}
+              - {name: description, label: Описание, widget: text, required: false}
+              - {name: media_url, label: Фото, widget: image, required: false}
+              - {name: sort_order, label: Порядок, widget: number, value_type: int, min: 0, default: 0}
+              - {name: is_visible, label: Показывать, widget: boolean, default: true}
+  - name: collections
+    label: Коллекции
+    files:
+      - name: collections
+        label: Коллекции
+        file: content/collections.json
+        format: json
+        fields:
+          - name: collections
+            label: Коллекции
+            widget: list
+            fields:
+              - {name: name, label: Название}
+              - {name: slug, label: Slug}
+              - {name: description, label: Описание, widget: text, required: false}
+              - {name: media_url, label: Фото, widget: image, required: false}
+              - {name: sort_order, label: Порядок, widget: number, value_type: int, min: 0, default: 0}
+              - {name: is_visible, label: Показывать, widget: boolean, default: true}
+  - name: homepage
+    label: Главная страница
+    files:
+      - name: homepage
+        label: Блоки главной
+        file: content/homepage.json
+        format: json
+        fields:
+          - name: sections
+            label: Блоки
+            widget: list
+            fields:
+              - {name: key, label: Блок, widget: select, options: [hero, categories, new, featured, cinematic, promo, benefits]}
+              - {name: enabled, label: Показывать, widget: boolean, default: true}
+              - {name: sort_order, label: Порядок, widget: number, value_type: int, min: 0, default: 0}
+              - {name: status, label: Статус, widget: select, options: [published, draft], default: published}
+              - name: content
+                label: Содержимое
+                widget: object
+                fields:
+                  - {name: eyebrow, label: Label, required: false}
+                  - {name: title, label: Заголовок, required: false}
+                  - {name: subtitle, label: Подзаголовок, widget: text, required: false}
+                  - {name: cta_label, label: Текст кнопки, required: false}
+                  - {name: cta_href, label: Ссылка кнопки, required: false}
+                  - {name: media_url, label: Desktop фото, widget: image, required: false}
+                  - {name: mobile_media_url, label: Mobile фото, widget: image, required: false}
+                  - {name: alignment, label: Выравнивание, widget: select, options: [left, center, right], required: false}
+  - name: settings
+    label: Настройки магазина
+    files:
+      - name: settings
+        label: Настройки
+        file: content/settings.json
+        format: json
+        fields:
+          - name: settings
+            label: Настройки
+            widget: object
+            fields:
+              - {name: store_name, label: Название магазина}
+              - {name: whatsapp, label: WhatsApp, hint: "Международный формат, только цифры"}
+              - {name: telegram, label: Telegram, required: false}
+              - {name: phone, label: Телефон, required: false}
+              - {name: email, label: Email, required: false}
+              - {name: delivery, label: Доставка, widget: text, required: false}
+              - {name: returns, label: Возврат, widget: text, required: false}
+              - {name: footer, label: Footer, widget: text, required: false}
+              - {name: seo_title, label: SEO title, required: false}
+              - {name: seo_description, label: SEO description, widget: text, required: false}

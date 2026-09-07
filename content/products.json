@@ -1,0 +1,852 @@
+{
+  "products": [
+    {
+      "id": "60715e9a-02d0-497b-87fa-50f73aec5e27",
+      "name": "Платье Нур",
+      "slug": "plate-nur",
+      "short_description": "Воздушный многоярусный силуэт с деликатной отделкой",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 1899000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": true,
+      "is_new": true,
+      "collections": [
+        "novinki"
+      ],
+      "media": [
+        {
+          "id": "0202c03f-a889-4a1f-a5a3-a5f874667d44",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Платье Нур, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "9f0db133-c680-4269-962e-05cf953740c2",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Платье Нур, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "cbffa47e-5cac-4c5b-bb63-cd7b65c92709",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Платье Нур, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "38415ac0-07e9-4248-af49-37cf468f0fcb",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платье Нур, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "afa9b0a5-da31-40fd-bd82-03dd76cd35bc",
+          "sku": "PLATE-NUR-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "42bd360d-b19e-4915-b9f7-c7f80b7411a0",
+          "sku": "PLATE-NUR-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "cfbdb2f5-f90a-451f-adb5-565653e4a5cf",
+          "sku": "PLATE-NUR-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "8d498215-2760-41f1-966b-8f8efee28244",
+          "sku": "PLATE-NUR-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 0
+    },
+    {
+      "id": "58cea164-7fb6-4fc5-b364-32eda9b6154d",
+      "name": "Платье Сафия",
+      "slug": "plate-safiya",
+      "short_description": "Мягкая линия плеча и выразительные кружевные манжеты",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 1599000,
+      "compare_at_price": 1899000,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": true,
+      "is_new": true,
+      "collections": [
+        "novinki"
+      ],
+      "media": [
+        {
+          "id": "d8becddf-e75a-4ad5-8543-b983dbcb863f",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Платье Сафия, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "94729501-ad48-491c-8806-32c59b4524f0",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Платье Сафия, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "f46442c8-2f15-4ee0-84ae-4f2f37a04047",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платье Сафия, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "23319cc7-bef8-40b1-a91b-8229c947fbad",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Платье Сафия, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "2f1bf4e9-ec8d-4efd-b7ca-051b92233f40",
+          "sku": "PLATE-SAFIYA-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "8544f30e-ab8d-4e0d-94fe-45483891c61e",
+          "sku": "PLATE-SAFIYA-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "d901eef8-a610-4400-8780-50f9a4a727f3",
+          "sku": "PLATE-SAFIYA-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "a7ff0493-e2bf-4e34-9245-1bd4b2ee5141",
+          "sku": "PLATE-SAFIYA-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 1
+    },
+    {
+      "id": "4e3396c1-118e-4821-a747-9af4b066b811",
+      "name": "Платье Амаль",
+      "slug": "plate-amal",
+      "short_description": "Лаконичный образ с тонкой вышивкой по линии талии",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 1399000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [
+        "novinki"
+      ],
+      "media": [
+        {
+          "id": "ccdab593-2325-465c-9c10-b1c05f9f6cff",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Платье Амаль, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "58818c73-6eb9-439e-b0a4-a6628331d948",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платье Амаль, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "cf74b5be-aa68-4aed-a3f2-e9d44f518309",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Платье Амаль, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "7ea70cfa-1142-405f-b0e5-624b7c594868",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Платье Амаль, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "5d72aded-7abd-4c50-b133-5396833fcff1",
+          "sku": "PLATE-AMAL-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "80ef1074-a5aa-4822-91f8-f996e8c43085",
+          "sku": "PLATE-AMAL-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "8cee12b1-ceb4-41e9-a606-7e43b1b304cc",
+          "sku": "PLATE-AMAL-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "50802ad8-fe02-46b3-b2fc-34cd73d60b94",
+          "sku": "PLATE-AMAL-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 2
+    },
+    {
+      "id": "568f2282-a694-4e13-ba3c-b4acf57c3a75",
+      "name": "Платье Лейла",
+      "slug": "plate-leyla",
+      "short_description": "Текучая ткань и спокойный архитектурный объём",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 1699000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": true,
+      "is_new": true,
+      "collections": [
+        "novinki"
+      ],
+      "media": [
+        {
+          "id": "02ab8fbb-822e-4f67-ad82-0f71f0de0397",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платье Лейла, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "e8769ebf-f4c6-4446-8368-fbe47abe5689",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Платье Лейла, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "e3c6714d-c39b-4090-a11c-d640e2c14967",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Платье Лейла, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "7c8acf25-f110-4647-9bb9-48f04556a62d",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Платье Лейла, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "d782d2af-bc80-4381-a23c-0c95fd3b0548",
+          "sku": "PLATE-LEYLA-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "bc1ca959-bd38-4e9c-8b02-7bf33cf32254",
+          "sku": "PLATE-LEYLA-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "e26f1932-a560-4d29-87c5-ffeffbfe11fd",
+          "sku": "PLATE-LEYLA-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "81c84f5e-7ac3-4b0e-b3ab-5cb9b2c7e3bf",
+          "sku": "PLATE-LEYLA-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 3
+    },
+    {
+      "id": "ddbfc85e-fdc0-4146-ae3a-f1d417bc017d",
+      "name": "Костюм Самир",
+      "slug": "kostyum-samir",
+      "short_description": "Свободный жакет и широкие брюки",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Костюмы",
+      "category_slug": "kostyumy",
+      "price": 2199000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [],
+      "media": [
+        {
+          "id": "0b348af6-b8b9-4395-afa6-8d3e6eb9e6ae",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Костюм Самир, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "38634662-1f23-4df2-9184-da4ff8172fa9",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Костюм Самир, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "6e03a752-baa4-463f-b2b8-410c745f3213",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Костюм Самир, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "b267dfa7-47fe-4fb7-b7f0-15e35d657a39",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Костюм Самир, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "89185f54-db41-44d7-8a6f-11c5a1efa454",
+          "sku": "KOSTYUM-SAMIR-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "e30fdc35-6011-4f23-acbe-2ca18a8d8e30",
+          "sku": "KOSTYUM-SAMIR-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "6a592309-2dae-490e-ace2-bae73dda7a3c",
+          "sku": "KOSTYUM-SAMIR-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "c82f6d33-2ebf-4736-8f10-c9fe446d4d3a",
+          "sku": "KOSTYUM-SAMIR-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 4
+    },
+    {
+      "id": "285ff713-0857-4ef9-a601-a86e711e84cb",
+      "name": "Платок Дымка",
+      "slug": "platok-dymka",
+      "short_description": "Полупрозрачный шёлковый платок",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платки",
+      "category_slug": "platki",
+      "price": 399000,
+      "compare_at_price": 499000,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [],
+      "media": [
+        {
+          "id": "6bd24d35-9883-44c0-b6b1-1a1de83f75f6",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Платок Дымка, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "582b4d23-2748-405e-9008-ac016cd1717d",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Платок Дымка, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "a30a89cc-045f-4990-b0b9-6a4aea00b032",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Платок Дымка, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "53f96b26-1f03-406b-91d2-6cea5dd99385",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платок Дымка, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "f7138310-ac91-419d-bb2c-e8c1d4c49d6b",
+          "sku": "PLATOK-DYMKA-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "adab486a-b539-497c-b086-a8d5e3418b12",
+          "sku": "PLATOK-DYMKA-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "f92d7d9a-a8fb-4660-9942-dd78ce5f6295",
+          "sku": "PLATOK-DYMKA-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "c2284919-7a8c-4a41-bf2a-403f2f7fd7f3",
+          "sku": "PLATOK-DYMKA-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 5
+    },
+    {
+      "id": "1021d5e0-043f-4b09-87ba-363c8850fd13",
+      "name": "Пальто Тишина",
+      "slug": "palto-tishina",
+      "short_description": "Чистый силуэт из мягкой шерсти",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Верхняя одежда",
+      "category_slug": "verkhnyaya-odezhda",
+      "price": 2799000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [],
+      "media": [
+        {
+          "id": "c3802561-4be3-4512-8287-170981ee3308",
+          "type": "image",
+          "url": "/images/dress-editorial.jpg",
+          "alt_text": "Пальто Тишина, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "e4aa3654-31a6-473b-afe0-a1a4368d6278",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Пальто Тишина, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "652c72cd-579e-44da-ab7c-e95f962e13ab",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Пальто Тишина, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "22c33be8-ebdf-4d05-b341-39b7b8b9bb2a",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Пальто Тишина, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "d038aab0-17a3-4387-a1ce-8fe463139656",
+          "sku": "PALTO-TISHINA-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "8d5913a1-18ab-4a98-89ab-c47cb15e5470",
+          "sku": "PALTO-TISHINA-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "6e3c8dd9-4e7e-4d06-895d-9ae3d6c3cd6e",
+          "sku": "PALTO-TISHINA-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "2550b5f9-342d-4b90-8717-15fc3f675126",
+          "sku": "PALTO-TISHINA-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 6
+    },
+    {
+      "id": "1f943334-9aa8-42a9-969e-a1dfd57e5a7e",
+      "name": "Платье Рания",
+      "slug": "plate-raniya",
+      "short_description": "Сдержанное платье для длинных вечеров",
+      "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 1499000,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "published",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [],
+      "media": [
+        {
+          "id": "0a7cfef7-1fd9-4403-a8a8-31cc86ff8360",
+          "type": "image",
+          "url": "/images/dress-store.jpg",
+          "alt_text": "Платье Рания, вид 1",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "f6c13874-be42-49f1-a4bb-058335290547",
+          "type": "image",
+          "url": "/images/dress-blueprint.jpg",
+          "alt_text": "Платье Рания, вид 2",
+          "sort_order": 1,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "9dc4ffdc-d174-4e39-899c-c9751b918293",
+          "type": "image",
+          "url": "/images/dress-details.jpg",
+          "alt_text": "Платье Рания, вид 3",
+          "sort_order": 2,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        },
+        {
+          "id": "5a180cfd-7ef9-4d8a-a822-996ce8cbe309",
+          "type": "image",
+          "url": "/images/dress-studio.jpg",
+          "alt_text": "Платье Рания, вид 4",
+          "sort_order": 3,
+          "is_primary": false,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
+      "variants": [
+        {
+          "id": "800df5fc-e748-4f8b-9eec-8e9acb410da3",
+          "sku": "PLATE-RANIYA-42",
+          "options": {
+            "size": "42",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "c338d57f-6e73-469f-964d-d68cc49277b0",
+          "sku": "PLATE-RANIYA-44",
+          "options": {
+            "size": "44",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "17c0246a-b338-48ee-9fe3-da537b3d6585",
+          "sku": "PLATE-RANIYA-46",
+          "options": {
+            "size": "46",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        },
+        {
+          "id": "14b0c915-0902-48ac-a09a-430d87132154",
+          "sku": "PLATE-RANIYA-48",
+          "options": {
+            "size": "48",
+            "color": "Чёрный"
+          },
+          "stock_quantity": 0,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "sort_order": 7
+    }
+  ]
+}

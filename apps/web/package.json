@@ -2,7 +2,7 @@
   "name": "atelier-web",
   "version": "0.1.0",
   "private": true,
-  "scripts": {"dev":"next dev","build":"next build","build:static":"node scripts/build-static.mjs","start":"next start","lint":"next lint","typecheck":"tsc --noEmit","test":"vitest run"},
+  "scripts": {"dev":"next dev","build":"next build","content:split":"node scripts/split-storefront-content.mjs","build:static":"node scripts/build-static.mjs","start":"next start","lint":"next lint","typecheck":"tsc --noEmit","test":"vitest run"},
   "dependencies": {"@phosphor-icons/react":"^2.1.10","next":"15.5.24","react":"19.1.1","react-dom":"19.1.1"},
   "devDependencies": {"@testing-library/react":"^16.3.0","@types/node":"^22.17.2","@types/react":"^19.1.10","@types/react-dom":"^19.1.7","eslint":"^9.34.0","eslint-config-next":"15.5.24","typescript":"^5.9.2","vitest":"^3.2.4"}
 }

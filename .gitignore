@@ -10,6 +10,7 @@ apps/web/.next
 apps/web/node_modules
 apps/web/out
 apps/web/.env.local
+apps/web/public/admin/config.yml
 debug.log
 __pycache__
 .pytest_cache

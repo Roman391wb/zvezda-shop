@@ -1,9 +1,9 @@
 export type Media={id:string;type:"image"|"video"|string;url:string;alt_text:string;sort_order:number;is_primary:boolean;is_secondary?:boolean;variant_id?:string|null};
 export type Variant={id:string;sku:string;options:Record<string,string>;stock_quantity:number;is_active:boolean;media?:Media[]};
 export type StoryBlock={type:string;title:string|null;body:string|null;media_url:string|null;sort_order:number;metadata?:Record<string,unknown>|null};
-export type Product={id:string;name:string;slug:string;short_description:string;description?:string;category:string;price:number;compare_at_price:number|null;currency:string;status:string;is_featured:boolean;is_new:boolean;collections:string[];media:Media[];effective_price?:number;discount_name?:string|null;variants?:Variant[];attributes?:{name:string;slug:string;value:string}[];story_blocks?:StoryBlock[]};
-export type Category={name:string;slug:string;description:string|null;media_url:string|null};
-export type Collection={name:string;slug:string;description:string|null;media_url:string|null};
+export type Product={id:string;name:string;slug:string;short_description:string;description?:string;category:string;price:number;compare_at_price:number|null;currency:string;status:string;is_featured:boolean;is_new:boolean;sort_order?:number;collections:string[];media:Media[];effective_price?:number;discount_name?:string|null;variants?:Variant[];attributes?:{name:string;slug:string;value:string}[];story_blocks?:StoryBlock[]};
+export type Category={name:string;slug:string;description:string|null;media_url:string|null;sort_order?:number;is_visible?:boolean};
+export type Collection={name:string;slug:string;description:string|null;media_url:string|null;sort_order?:number;is_visible?:boolean};
 export type ProductList={items:Product[];total:number;limit:number;offset:number};
 export type HomepageSection={key:"hero"|"categories"|"new"|"cinematic"|"featured"|"promo"|"benefits";enabled:boolean;sort_order:number;status:string;content:Record<string,unknown>};
 export type CheckoutQuote={lines:{name:string;slug:string;options:Record<string,string>;quantity:number;unit_price:number;subtotal:number}[];total:number};
