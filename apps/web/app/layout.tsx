@@ -1,0 +1,3 @@
+import type {Metadata} from "next"; import "./globals.css"; import {StoreProvider} from "@/components/store-provider"; import {Header} from "@/components/header"; import {Footer} from "@/components/footer"; import {getStoreSettings} from "@/lib/api";
+export const metadata:Metadata={title:{default:"Магазин одежды",template:"%s"},description:"Коллекции одежды."};
+export default async function Layout({children}:{children:React.ReactNode}){const settings=await getStoreSettings();return <html lang="ru"><body><StoreProvider><Header storeName={settings.store_name}/>{children}<Footer settings={settings}/></StoreProvider></body></html>}

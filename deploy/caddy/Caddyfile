@@ -1,0 +1,31 @@
+{
+  email {$ACME_EMAIL:}
+}
+
+# Non-www is canonical. Caddy obtains and renews certificates automatically
+# once both DNS records point to this server and ports 80/443 are reachable.
+www.{$DOMAIN} {
+  redir https://{$DOMAIN}{uri} permanent
+}
+
+{$DOMAIN} {
+  encode zstd gzip
+  request_body {
+    max_size 70MB
+  }
+  header {
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+  @admin path /admin*
+  header @admin X-Robots-Tag "noindex, nofollow, noarchive"
+  reverse_proxy web:3000 {
+    transport http {
+      read_timeout 60s
+      write_timeout 60s
+    }
+  }
+}

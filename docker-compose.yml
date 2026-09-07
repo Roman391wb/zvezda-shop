@@ -1,0 +1,58 @@
+name: ziyarat-store
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-atelier}
+      POSTGRES_USER: ${POSTGRES_USER:-atelier}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-atelier}
+    volumes:
+      - atelier_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://atelier:atelier@postgres:5432/atelier}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      ADMIN_BOOTSTRAP_LOGIN: ${ADMIN_BOOTSTRAP_LOGIN:-}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:-}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:-}
+      ADMIN_COOKIE_SECURE: ${ADMIN_COOKIE_SECURE:-false}
+      MEDIA_ROOT: /app/media
+    volumes:
+      - product_media:/app/media
+    # Kept on loopback for local diagnostics only; web reaches it over Docker DNS.
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  web:
+    build:
+      context: ./apps/web
+      args:
+        BACKEND_INTERNAL_URL: ${BACKEND_INTERNAL_URL:-http://api:8000}
+        NEXT_PUBLIC_STORE_WHATSAPP_NUMBER: ${NEXT_PUBLIC_STORE_WHATSAPP_NUMBER:-}
+        NEXT_PUBLIC_STORE_NAME: ${NEXT_PUBLIC_STORE_NAME:-}
+    environment:
+      BACKEND_INTERNAL_URL: ${BACKEND_INTERNAL_URL:-http://api:8000}
+      STORE_NAME: ${STORE_NAME:-Зиярат}
+      NEXT_PUBLIC_STORE_WHATSAPP_NUMBER: ${NEXT_PUBLIC_STORE_WHATSAPP_NUMBER:-}
+      NEXT_PUBLIC_STORE_NAME: ${NEXT_PUBLIC_STORE_NAME:-}
+    # Development only. Set WEB_BIND_IP to a chosen LAN interface when needed;
+    # production uses docker-compose.prod.yml and exposes only Caddy on 80/443.
+    ports: ["${WEB_BIND_IP:-127.0.0.1}:3000:3000"]
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  atelier_postgres_data:
+  product_media:

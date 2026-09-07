@@ -1,0 +1,9 @@
+[Unit]
+Description=Ziyarat PostgreSQL and media backup
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/ziyarat-store
+ExecStart=/opt/ziyarat-store/scripts/backup_production.sh /opt/ziyarat-store/.env.production

@@ -1,0 +1,4 @@
+import Link from "next/link";
+
+type Section={title:string;body:string};
+export function InformationPage({eyebrow,title,intro,sections}:{eyebrow:string;title:string;intro:string;sections:Section[]}){return <main className="wrap information"><div className="eyebrow">{eyebrow}</div><h1>{title}</h1><p className="information-intro">{intro}</p><div className="information-grid">{sections.map(section=><section className="information-card" key={section.title}><h2>{section.title}</h2><p>{section.body}</p></section>)}</div><aside className="placeholder"><strong>Данные для заполнения владельцем магазина</strong><p>Этот раздел содержит ориентир для покупателя. Перед публикацией укажите реальные сроки, условия, контакты и реквизиты магазина.</p></aside><Link className="btn" href="/catalog">Перейти в каталог</Link></main>}

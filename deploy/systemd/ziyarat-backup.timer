@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Ziyarat backup
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 UTC
+Persistent=true
+Unit=ziyarat-backup.service
+
+[Install]
+WantedBy=timers.target
