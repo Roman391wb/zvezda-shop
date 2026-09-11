@@ -33,8 +33,8 @@ vars = { ENVIRONMENT = "staging", ALLOWED_ORIGINS = "https://staging.example.com
 
 [[env.staging.d1_databases]]
 binding = "DB"
-database_name = "zvezda-admin-staging"
-database_id = "d31af006-23f8-4e50-9fcd-74c89da82fa5"
+database_name = "ziyarat-admin-staging"
+database_id = "3b6dbce3-c001-46a6-aa94-ec0d10d81569"
 migrations_dir = "migrations"
 
 [env.production]
