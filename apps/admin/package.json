@@ -1,0 +1,9 @@
+{
+  "name": "ziyarat-admin-ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -l 4174",
+    "build": "node scripts/build.mjs"
+  }
+}

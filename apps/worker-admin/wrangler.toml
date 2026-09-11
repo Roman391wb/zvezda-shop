@@ -1,0 +1,46 @@
+name = "zvezda-admin-api"
+main = "src/index.ts"
+compatibility_date = "2026-09-07"
+workers_dev = false
+
+# Bind production only after creating the D1 database. IDs are deliberately not
+# committed until the Cloudflare account is chosen.
+[vars]
+ENVIRONMENT = "development"
+ALLOWED_ORIGINS = "http://localhost:4174"
+GITHUB_OWNER = "Roman391wb"
+GITHUB_REPO = "zvezda-shop"
+GITHUB_REF = "main"
+WRITES_ENABLED = "false"
+
+# Local-only development database. The ID is never contacted by --local and is
+# deliberately not a production or staging binding.
+[[d1_databases]]
+binding = "DB"
+database_name = "admin_v1"
+database_id = "00000000-0000-0000-0000-000000000001"
+migrations_dir = "migrations"
+
+[env.development]
+
+[env.staging]
+name = "zvezda-admin-api-staging"
+workers_dev = true
+# This branch is the sole real-write target for the Phase 2.5 integration gate.
+# Keep WRITES_ENABLED false in version control; enable it only for reviewed
+# live staging integration tests after the GitHub App and D1 are verified.
+vars = { ENVIRONMENT = "staging", ALLOWED_ORIGINS = "https://staging.example.com", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "admin-staging", WRITES_ENABLED = "false" }
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "zvezda-admin-staging"
+database_id = "d31af006-23f8-4e50-9fcd-74c89da82fa5"
+migrations_dir = "migrations"
+
+[env.production]
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://shop.example.com", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "main", WRITES_ENABLED = "false" }
+
+# Required Worker secrets (set with `wrangler secret put`, never in this file):
+# IP_HASH_PEPPER, GITHUB_APP_ID, GITHUB_INSTALLATION_ID,
+# GITHUB_APP_PRIVATE_KEY. WRITES_ENABLED remains a non-secret "false" unless
+# an explicitly reviewed environment configuration enables the pilot.
