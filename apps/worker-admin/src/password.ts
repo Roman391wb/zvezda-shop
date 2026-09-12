@@ -1,14 +1,14 @@
 import { constantTimeEqualBytes, randomToken } from "./crypto";
-import { fromBase64Url, PASSWORD_ALGORITHM, PASSWORD_DERIVED_KEY_BITS, PASSWORD_ITERATIONS, parsePasswordHash, serializePasswordHash } from "./password-format.js";
-
-const encoder = new TextEncoder();
+import { pbkdf2 } from "node:crypto";
+import { fromBase64Url, PASSWORD_ALGORITHM, PASSWORD_DERIVED_KEY_BYTES, PASSWORD_ITERATIONS, parsePasswordHash, serializePasswordHash } from "./password-format.js";
 
 async function derive(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
-  const key = await crypto.subtle.importKey("raw", encoder.encode(password), { name: "PBKDF2" }, false, ["deriveBits"]);
-  const saltCopy = new Uint8Array(salt.byteLength);
-  saltCopy.set(salt);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: { name: "SHA-256" }, salt: saltCopy, iterations }, key, PASSWORD_DERIVED_KEY_BITS);
-  return new Uint8Array(bits);
+  return await new Promise<Uint8Array>((resolve, reject) => {
+    pbkdf2(password, salt, iterations, PASSWORD_DERIVED_KEY_BYTES, "sha256", (error, derived) => {
+      if (error) reject(error);
+      else resolve(new Uint8Array(derived));
+    });
+  });
 }
 
 export interface PasswordHasher {
