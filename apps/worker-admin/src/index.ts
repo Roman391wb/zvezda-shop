@@ -94,7 +94,7 @@ function contentArray(value: unknown, key: string): Record<string, unknown>[] {
 function ifMatch(request: Request): string {
   const value = request.headers.get("If-Match");
   if (!value) throw new AppError(428, "PRECONDITION_REQUIRED", "Требуется If-Match revision");
-  return value.trim().replace(/^"|"$/gu, "");
+  return value.trim().replace(/^W\//iu, "").replace(/^"|"$/gu, "");
 }
 
 function idempotencyKey(request: Request): string {
