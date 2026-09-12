@@ -847,45 +847,6 @@
         }
       ],
       "sort_order": 7
-    },
-    {
-      "id": "1b87a1a9-9b48-46c1-ac88-1bff96edc707",
-      "name": "E2E товар изменён",
-      "article": "E2E-1789248451327",
-      "slug": "codex-e2e-1789248451327-product",
-      "short_description": "Временный товар",
-      "description": "E2E preview description",
-      "category": "E2E категория изменена",
-      "category_slug": "codex-e2e-1789248451327-category",
-      "price": 12345,
-      "compare_at_price": null,
-      "currency": "RUB",
-      "status": "published",
-      "is_featured": false,
-      "is_new": false,
-      "collections": [
-        "codex-e2e-1789248451327-collection"
-      ],
-      "media": [],
-      "variants": [
-        {
-          "id": "69ccceb4-c4c4-4b4b-a8b0-d42cb4273851",
-          "sku": "E2E-1789248451327-M",
-          "options": {
-            "size": "M",
-            "color": "black"
-          },
-          "stock_quantity": 4,
-          "is_active": true,
-          "media": []
-        }
-      ],
-      "attributes": [
-        {
-          "name": "test",
-          "value": "staging"
-        }
-      ]
     }
   ]
 }
