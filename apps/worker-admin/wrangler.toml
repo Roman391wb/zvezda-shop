@@ -1,7 +1,6 @@
 name = "zvezda-admin-api"
 main = "src/index.ts"
 compatibility_date = "2026-09-07"
-compatibility_flags = ["nodejs_compat"]
 workers_dev = false
 
 # Bind production only after creating the D1 database. IDs are deliberately not

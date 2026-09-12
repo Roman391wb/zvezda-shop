@@ -4,6 +4,7 @@ export const PASSWORD_ALGORITHM = "pbkdf2-sha256-v1";
 export const PASSWORD_ITERATIONS = 600_000;
 export const PASSWORD_SALT_BYTES = 16;
 export const PASSWORD_DERIVED_KEY_BYTES = 32;
+export const PASSWORD_DERIVED_KEY_BITS = PASSWORD_DERIVED_KEY_BYTES * 8;
 
 const BASE64_URL = /^[A-Za-z0-9_-]+$/u;
 
