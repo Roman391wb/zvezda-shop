@@ -1,22 +1,12 @@
 import { constantTimeEqualBytes, randomToken } from "./crypto";
-import { fromBase64Url, PASSWORD_ALGORITHM, PASSWORD_DERIVED_KEY_BITS, PASSWORD_ITERATIONS, parsePasswordHash, serializePasswordHash } from "./password-format.js";
+import { pbkdf2Async } from "@noble/hashes/pbkdf2.js";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { fromBase64Url, PASSWORD_ALGORITHM, PASSWORD_DERIVED_KEY_BYTES, PASSWORD_ITERATIONS, parsePasswordHash, serializePasswordHash } from "./password-format.js";
 
 const encoder = new TextEncoder();
 
-function derivationFailure(stage: "import" | "derive" | "export"): Error {
-  const error = new Error("PBKDF2 derivation failed");
-  error.name = `pbkdf2_${stage}_failed`;
-  return error;
-}
-
 async function derive(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
-  let key: CryptoKey;
-  try { key = await crypto.subtle.importKey("raw", encoder.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]); } catch { throw derivationFailure("import"); }
-  const saltCopy = new Uint8Array(salt.byteLength);
-  saltCopy.set(salt);
-  let derived: CryptoKey;
-  try { derived = await crypto.subtle.deriveKey({ name: "PBKDF2", hash: { name: "SHA-256" }, salt: saltCopy, iterations }, key, { name: "HMAC", hash: { name: "SHA-256" }, length: PASSWORD_DERIVED_KEY_BITS }, true, ["sign"]); } catch { throw derivationFailure("derive"); }
-  try { return new Uint8Array(await crypto.subtle.exportKey("raw", derived)); } catch { throw derivationFailure("export"); }
+  return await pbkdf2Async(sha256, encoder.encode(password), salt, { c: iterations, dkLen: PASSWORD_DERIVED_KEY_BYTES, asyncTick: 10 });
 }
 
 export interface PasswordHasher {
