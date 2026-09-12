@@ -41,11 +41,11 @@
       "is_visible": true
     },
     {
-      "name": "E2E категория",
+      "name": "E2E категория изменена",
       "slug": "codex-e2e-1789248907261-category",
       "description": "Временная staging категория",
       "media_url": null,
-      "sort_order": 100,
+      "sort_order": 101,
       "is_visible": true
     }
   ]
