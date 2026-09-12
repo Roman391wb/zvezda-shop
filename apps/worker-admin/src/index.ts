@@ -6,7 +6,7 @@ import { validateImage } from "./image-validation";
 import { GitHubWriter, type GitWriterPort } from "./github-writer";
 import { ContentService, type MutationActor } from "./content-service";
 import { apiCookie, csrfCookie, errorResponse, expiredApiCookie, expiredCsrfCookie, json, readJson, requestId } from "./http";
-import { passwordHasher, type PasswordHasher } from "./password";
+import { passwordHasher, type PasswordHasher, verifyPassword } from "./password";
 import { permissionsFor, requirePermission, type Permission } from "./permissions";
 import { currentSession, enforceCsrf, newSession, requestHash } from "./session";
 import { D1AdminStore, type AdminStore } from "./store";
@@ -178,9 +178,10 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
       throw new AppError(429, "rate_limited", "Слишком много попыток входа. Попробуйте позже.", { "Retry-After": String(limit.retryAfterSeconds) });
     }
     const user = await store.findUserByLogin(login);
-    const valid = user ? user.isActive && await hasher.verify(password, user.passwordHash) : false;
+    const verification = user?.isActive && hasher === passwordHasher ? await verifyPassword(password, user.passwordHash) : null;
+    const valid = user ? user.isActive && (verification?.valid ?? await hasher.verify(password, user.passwordHash)) : false;
     if (!valid || !user) {
-      await store.audit({ action: "auth.login_failure", requestId: id, ipHash, metadata: { reason: "invalid_credentials", login_hash: await sha256(login) } });
+      await store.audit({ action: "auth.login_failure", requestId: id, ipHash, metadata: { reason: "invalid_credentials", login_hash: await sha256(login), password_verification: verification?.status } });
       throw new AppError(401, "invalid_credentials", "Неверный логин или пароль");
     }
     const created = await newSession(store, user.id, user.sessionVersion, request, config.ipHashPepper);

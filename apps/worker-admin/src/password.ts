@@ -17,6 +17,19 @@ export interface PasswordHasher {
   verify(password: string, encoded: string): Promise<boolean>;
 }
 
+export type PasswordVerificationStatus = "valid" | "malformed" | "mismatch" | "derive_failed";
+
+export async function verifyPassword(password: string, encoded: string): Promise<{ valid: boolean; status: PasswordVerificationStatus }> {
+  const parsed = parsePasswordHash(encoded);
+  if (!parsed) return { valid: false, status: "malformed" };
+  try {
+    const valid = constantTimeEqualBytes(await derive(password, parsed.salt, parsed.iterations), parsed.derived);
+    return { valid, status: valid ? "valid" : "mismatch" };
+  } catch {
+    return { valid: false, status: "derive_failed" };
+  }
+}
+
 export const passwordHasher: PasswordHasher = {
   algorithm: PASSWORD_ALGORITHM,
   async hash(password) {
@@ -24,8 +37,6 @@ export const passwordHasher: PasswordHasher = {
     return serializePasswordHash(salt, await derive(password, salt, PASSWORD_ITERATIONS));
   },
   async verify(password, encoded) {
-    const parsed = parsePasswordHash(encoded);
-    if (!parsed) return false;
-    try { return constantTimeEqualBytes(await derive(password, parsed.salt, parsed.iterations), parsed.derived); } catch { return false; }
+    return (await verifyPassword(password, encoded)).valid;
   }
 };
