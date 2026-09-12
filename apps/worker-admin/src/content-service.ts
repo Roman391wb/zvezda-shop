@@ -78,6 +78,19 @@ export class ContentService {
     return this.commitDocument("products", { products }, productsDoc.sha, `admin: update product ${product.slug}`, actor, { action: "products.updated", targetType: "product", targetId: id, before, after: product });
   }
 
+  async previewProductUpdate(id: string, input: unknown, expected: string): Promise<{ revision: string; before: JsonObject; after: JsonObject }> {
+    const [productsDoc, categoriesDoc, collectionsDoc] = await Promise.all([this.writer.readByKey("products"), this.writer.readByKey("categories"), this.writer.readByKey("collections")]);
+    this.match(productsDoc.sha, expected, "products");
+    const products = array(object(productsDoc.value).products); const index = products.findIndex((item) => item.id === id);
+    if (index < 0) throw new AppError(404, "product_not_found", "Товар не найден");
+    const before = clone(products[index]);
+    const after = this.normalProduct(input, before, array(object(categoriesDoc.value).categories), array(object(collectionsDoc.value).collections));
+    after.id = id;
+    if (products.some((item, itemIndex) => itemIndex !== index && item.slug === after.slug)) throw new AppError(409, "duplicate_slug", "Slug уже используется");
+    if (after.article && products.some((item, itemIndex) => itemIndex !== index && item.article === after.article)) throw new AppError(409, "duplicate_article", "Артикул уже используется");
+    return { revision: productsDoc.sha, before, after };
+  }
+
   async deleteProduct(id: string, expected: string, actor: MutationActor): Promise<MutationResult> {
     const productsDoc = await this.writer.readByKey("products"); this.match(productsDoc.sha, expected, "products");
     const products = array(object(productsDoc.value).products); const index = products.findIndex((item) => item.id === id);

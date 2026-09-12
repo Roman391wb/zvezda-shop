@@ -288,6 +288,11 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
     const result = await jsonMutation(request, `products.update:${productId}`, "products.write", (body, actor) => content.updateProduct(productId, body, ifMatch(request), actor));
     return json(result, 200, id, { ETag: `"${result.revision ?? ""}"` });
   }
+  async function previewProduct(request: Request, id: string, productId: string): Promise<Response> {
+    const current = await authenticated(request, "products.write"); await enforceCsrf(current, request);
+    const result = await content.previewProductUpdate(productId, await readJson(request), ifMatch(request));
+    return json(result, 200, id, { ETag: `"${result.revision}"` });
+  }
   async function deleteProduct(request: Request, id: string, productId: string): Promise<Response> {
     const result = await contentMutation(request, `products.delete:${productId}`, "products.write", "", (actor) => content.deleteProduct(productId, ifMatch(request), actor)); return json(result, 200, id, { ETag: `"${result.revision ?? ""}"` });
   }
@@ -351,6 +356,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
         else if (request.method === "GET" && path === "/api/admin/dashboard") response = await dashboard(request, id);
         else if (request.method === "GET" && path === "/api/admin/products") response = await products(request, id);
         else if (request.method === "POST" && path === "/api/admin/products") response = await createProduct(request, id);
+        else if (request.method === "POST" && /^\/api\/admin\/products\/[^/]+\/preview$/u.test(path)) response = await previewProduct(request, id, decodeURIComponent(path.split("/")[4] ?? ""));
         else if (request.method === "GET" && /^\/api\/admin\/products\/[^/]+\/inventory$/u.test(path)) response = await inventoryHistory(request, id, decodeURIComponent(path.split("/")[4] ?? ""));
         else if (request.method === "PUT" && /^\/api\/admin\/products\/[^/]+$/u.test(path)) response = await updateProduct(request, id, decodeURIComponent(path.split("/").at(-1) ?? ""));
         else if (request.method === "DELETE" && /^\/api\/admin\/products\/[^/]+$/u.test(path)) response = await deleteProduct(request, id, decodeURIComponent(path.split("/").at(-1) ?? ""));
