@@ -860,7 +860,7 @@
       "price": 12345,
       "compare_at_price": null,
       "currency": "RUB",
-      "status": "published",
+      "status": "hidden",
       "is_featured": false,
       "is_new": false,
       "collections": [
