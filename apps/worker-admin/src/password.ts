@@ -1,21 +1,14 @@
-import { constantTimeEqual, randomToken, toBase64Url } from "./crypto";
+import { constantTimeEqualBytes, randomToken } from "./crypto";
+import { fromBase64Url, PASSWORD_ALGORITHM, PASSWORD_ITERATIONS, parsePasswordHash, serializePasswordHash } from "./password-format.js";
 
-const ITERATIONS = 600_000;
-const ALGORITHM = "pbkdf2-sha256-v1";
 const encoder = new TextEncoder();
 
-function fromBase64Url(value: string): Uint8Array {
-  const padded = value.replaceAll("-", "+").replaceAll("_", "/") + "=".repeat((4 - (value.length % 4)) % 4);
-  const binary = atob(padded);
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
-}
-
-async function derive(password: string, salt: Uint8Array, iterations: number): Promise<string> {
+async function derive(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
   const key = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, ["deriveBits"]);
   const saltCopy = new Uint8Array(salt.byteLength);
   saltCopy.set(salt);
   const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: saltCopy, iterations }, key, 256);
-  return toBase64Url(new Uint8Array(bits));
+  return new Uint8Array(bits);
 }
 
 export interface PasswordHasher {
@@ -25,16 +18,14 @@ export interface PasswordHasher {
 }
 
 export const passwordHasher: PasswordHasher = {
-  algorithm: ALGORITHM,
+  algorithm: PASSWORD_ALGORITHM,
   async hash(password) {
     const salt = fromBase64Url(randomToken(16));
-    const derived = await derive(password, salt, ITERATIONS);
-    return `${ALGORITHM}$${ITERATIONS}$${toBase64Url(salt)}$${derived}`;
+    return serializePasswordHash(salt, await derive(password, salt, PASSWORD_ITERATIONS));
   },
   async verify(password, encoded) {
-    const [algorithm, iterationsRaw, saltRaw, expected, ...extra] = encoded.split("$");
-    const iterations = Number(iterationsRaw);
-    if (extra.length || algorithm !== ALGORITHM || !Number.isInteger(iterations) || iterations < 600_000 || iterations > 2_000_000 || !saltRaw || !expected) return false;
-    try { return constantTimeEqual(await derive(password, fromBase64Url(saltRaw), iterations), expected); } catch { return false; }
+    const parsed = parsePasswordHash(encoded);
+    if (!parsed) return false;
+    try { return constantTimeEqualBytes(await derive(password, parsed.salt, parsed.iterations), parsed.derived); } catch { return false; }
   }
 };
