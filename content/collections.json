@@ -33,11 +33,11 @@
       "is_visible": true
     },
     {
-      "name": "E2E коллекция",
+      "name": "E2E коллекция изменена",
       "slug": "codex-e2e-1789248577175-collection",
       "description": "Временная staging коллекция",
       "media_url": null,
-      "sort_order": 100,
+      "sort_order": 102,
       "is_visible": true
     }
   ]
