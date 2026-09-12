@@ -847,6 +847,45 @@
         }
       ],
       "sort_order": 7
+    },
+    {
+      "id": "dc946bc1-3bde-45bc-a486-6eaee3c8507c",
+      "name": "E2E товар",
+      "article": "E2E-1789248301386",
+      "slug": "codex-e2e-1789248301386-product",
+      "short_description": "Временный товар",
+      "description": "Временный товар полного CRUD E2E",
+      "category": "E2E категория изменена",
+      "category_slug": "codex-e2e-1789248301386-category",
+      "price": 12345,
+      "compare_at_price": null,
+      "currency": "RUB",
+      "status": "draft",
+      "is_featured": false,
+      "is_new": false,
+      "collections": [
+        "codex-e2e-1789248301386-collection"
+      ],
+      "media": [],
+      "variants": [
+        {
+          "id": "9cc4c9f7-c25e-4ee1-8416-2de788e5f4b0",
+          "sku": "E2E-1789248301386-M",
+          "options": {
+            "size": "M",
+            "color": "black"
+          },
+          "stock_quantity": 4,
+          "is_active": true,
+          "media": []
+        }
+      ],
+      "attributes": [
+        {
+          "name": "test",
+          "value": "staging"
+        }
+      ]
     }
   ]
 }
