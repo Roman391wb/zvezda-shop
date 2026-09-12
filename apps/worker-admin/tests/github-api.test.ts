@@ -32,12 +32,12 @@ describe("GitHub API safety", () => {
   });
 
   it("classifies a fetch throw and invokes fetch without an object receiver", async () => {
-    let receiver: unknown = "unset";
+    const capture: { receiver: unknown } = { receiver: "unset" };
     const requestFetch = function (this: unknown): Promise<Response> {
-      receiver = this;
+      capture.receiver = this;
       throw new TypeError("network failed ghs_secret.must.not-leak");
     } as typeof fetch;
     await expect(githubFetch(requestFetch, "test_stage", "https://api.github.com/app?ignored=true", {})).rejects.toMatchObject({ code: "github_unavailable" });
-    expect(receiver).toBeUndefined();
+    expect(capture.receiver).toBeUndefined();
   });
 });

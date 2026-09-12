@@ -44,6 +44,9 @@ class MemoryStore implements AdminStore {
   async publishJob(commitSha: string) { return this.publishJobs.find((job) => job.github_commit_sha === commitSha) ?? null; }
   async latestPublishJob() { return this.publishJobs.at(-1) ?? null; }
   async updatePublishJob(commitSha: string, status: string, deploymentUrl: string | null) { const current = this.publishJobs.find((job) => job.github_commit_sha === commitSha); if (current) Object.assign(current, { status, deployment_url: deploymentUrl }); }
+  async listAudit(input: { user?: string; action?: string; entity?: string; outcome?: string; from?: number; to?: number; limit: number }) {
+    return this.auditEvents.filter((event) => !input.action || event.action.includes(input.action)).slice(-input.limit).reverse().map((event, index) => ({ id: `audit-${index}`, actor_user_id: event.actorUserId, actor_login: this.users.get(event.actorUserId ?? "")?.displayLogin ?? null, actor_role: this.users.get(event.actorUserId ?? "")?.role ?? null, action: event.action, target_type: event.targetType, target_id: event.targetId, request_id: event.requestId, outcome: event.outcome ?? "success", created_at: now + index }));
+  }
 }
 
 class MemoryReader {
@@ -131,6 +134,21 @@ describe("Admin v1 Worker Phase 1", () => {
     const { cookie: moderatorCookie } = await login("moderator");
     const settingsResponse = await app().fetch(request("/api/admin/settings", { headers: { Cookie: moderatorCookie, Origin: "https://shop.example.com" } }));
     expect(settingsResponse.status).toBe(403);
+  });
+
+  it("returns real dashboard counters and keeps the audit feed ADMIN-only", async () => {
+    const loggedIn = await login();
+    await store.audit({ actorUserId: "admin-1", action: "products.updated", targetType: "product", targetId: "product-1", requestId: "request-audit" });
+    const headers = { Cookie: loggedIn.cookie, Origin: "https://shop.example.com" };
+    const dashboard = await app().fetch(request("/api/admin/dashboard", { headers }));
+    expect(dashboard.status).toBe(200);
+    expect(await dashboard.json()).toMatchObject({ total: 1, published: 1, hidden: 0, without_card_image: 1, without_stock: 0, categories: 0, collections: 0 });
+    const audit = await app().fetch(request("/api/admin/audit?action=products", { headers }));
+    expect(audit.status).toBe(200);
+    expect(await audit.json()).toEqual([expect.objectContaining({ action: "products.updated", request_id: "request-audit" })]);
+    store = new MemoryStore(moderator());
+    const moderatorLogin = await login("moderator");
+    expect((await app().fetch(request("/api/admin/audit", { headers: { Cookie: moderatorLogin.cookie } }))).status).toBe(403);
   });
 
   it("audits logout and password changes, then revokes the old session", async () => {

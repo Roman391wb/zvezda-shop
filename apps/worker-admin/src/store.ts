@@ -77,6 +77,7 @@ export interface AdminStore {
   publishJob(commitSha: string): Promise<Record<string, unknown> | null>;
   latestPublishJob(): Promise<Record<string, unknown> | null>;
   updatePublishJob(commitSha: string, status: string, deploymentUrl: string | null, now: number): Promise<void>;
+  listAudit?(input: { user?: string; action?: string; entity?: string; outcome?: string; from?: number; to?: number; limit: number }): Promise<Record<string, unknown>[]>;
   listUsers?(): Promise<AdminUser[]>;
   createUser?(input: AdminUser): Promise<void>;
   updateUser?(id: string, input: { role?: "ADMIN" | "MODERATOR"; isActive?: boolean; now: number }): Promise<AdminUser | null>;
@@ -212,6 +213,19 @@ export class D1AdminStore implements AdminStore {
 
   async updatePublishJob(commitSha: string, status: string, deploymentUrl: string | null, now: number): Promise<void> {
     await this.db.prepare("UPDATE publish_jobs SET status=?,deployment_url=?,updated_at=? WHERE github_commit_sha=?").bind(status, deploymentUrl, now, commitSha).run();
+  }
+
+  async listAudit(input: { user?: string; action?: string; entity?: string; outcome?: string; from?: number; to?: number; limit: number }): Promise<Record<string, unknown>[]> {
+    const clauses: string[] = []; const values: unknown[] = [];
+    if (input.user) { clauses.push("(ae.actor_user_id=? OR au.login_normalized LIKE ?)"); values.push(input.user, `%${input.user.toLocaleLowerCase("en-US")}%`); }
+    if (input.action) { clauses.push("ae.action LIKE ?"); values.push(`%${input.action}%`); }
+    if (input.entity) { clauses.push("(ae.target_type LIKE ? OR ae.target_id LIKE ?)"); values.push(`%${input.entity}%`, `%${input.entity}%`); }
+    if (input.outcome) { clauses.push("ae.outcome=?"); values.push(input.outcome); }
+    if (input.from) { clauses.push("ae.created_at>=?"); values.push(input.from); }
+    if (input.to) { clauses.push("ae.created_at<=?"); values.push(input.to); }
+    const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
+    const result = await this.db.prepare(`SELECT ae.id,ae.actor_user_id,au.display_login AS actor_login,au.role AS actor_role,ae.action,ae.target_type,ae.target_id,ae.request_id,ae.outcome,ae.commit_sha,ae.created_at FROM audit_events ae LEFT JOIN admin_users au ON au.id=ae.actor_user_id ${where} ORDER BY ae.created_at DESC LIMIT ?`).bind(...values, Math.min(Math.max(input.limit, 1), 200)).all<Record<string, unknown>>();
+    return result.results;
   }
 
   private async finishIdempotency(input: { actorUserId: string; operation: string; keyHash: string; status: number; response: unknown }, state: "COMPLETED" | "FAILED"): Promise<void> {

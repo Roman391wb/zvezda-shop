@@ -238,17 +238,16 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
   }
 
   async function dashboard(request: Request, id: string): Promise<Response> {
-    await authenticated(request, "products.read");
-    const products = contentArray(await readFor(reader, "products"), "products");
+    const current = await authenticated(request, "products.read");
+    const [productsValue, categoriesValue, collectionsValue] = await Promise.all([readFor(reader, "products"), readFor(reader, "categories"), readFor(reader, "collections")]);
+    const products = contentArray(productsValue, "products"); const categories = contentArray(categoriesValue, "categories"); const collections = contentArray(collectionsValue, "collections");
     const total = products.length;
     const published = products.filter((product) => product.status === "published").length;
     const hidden = products.filter((product) => product.status === "hidden" || product.status === "draft").length;
-    const sale = products.filter((product) => typeof product.compare_at_price === "number" && typeof product.price === "number" && product.compare_at_price > product.price).length;
-    const lowStock = products.filter((product) => {
-      const variants = Array.isArray(product.variants) ? product.variants : [];
-      return variants.some((variant) => variant && typeof variant === "object" && Number((variant as Record<string, unknown>).stock_quantity) <= 0);
-    }).length;
-    return json({ total, published, hidden, sale, low_stock: lowStock, recent: products.slice(-5).reverse() }, 200, id);
+    const withoutCardImage = products.filter((product) => !product.cardImage).length;
+    const withoutStock = products.filter((product) => !Array.isArray(product.variants) || product.variants.reduce((sum, variant) => sum + Number((variant as Record<string, unknown>).stock_quantity ?? 0), 0) <= 0).length;
+    const recentAudit = current.user.role === "ADMIN" && store.listAudit ? await store.listAudit({ limit: 8 }) : [];
+    return json({ total, published, hidden, without_card_image: withoutCardImage, without_stock: withoutStock, categories: categories.length, collections: collections.length, recent_audit: recentAudit }, 200, id);
   }
 
   async function products(request: Request, id: string, productId?: string): Promise<Response> {
@@ -336,6 +335,11 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
   async function deleteMedia(request: Request, id: string, mediaId: string): Promise<Response> { const result = await contentMutation(request, `media.delete:${mediaId}`, "media.manage", "", (actor) => content.deleteMedia(mediaId, ifMatch(request), actor)); return json(result, 200, id); }
   async function publishStatus(request: Request, id: string, commitSha: string): Promise<Response> { await authenticated(request, "products.read"); const stored = await store.publishJob(commitSha); if (!stored) throw new AppError(404, "publish_not_found", "Publish job не найден"); const run = await writer.workflowForCommit(commitSha); if (run) { const status = run.conclusion === "success" ? "success" : run.conclusion === "failure" ? "failure" : run.status === "in_progress" ? "in_progress" : "queued"; await store.updatePublishJob(commitSha, status, run.url, Date.now()); return json({ ...stored, status, deployment_url: run.url, saved: true, published: status === "success" }, 200, id); } return json({ ...stored, saved: true, published: false }, 200, id); }
   async function latestDeployment(request: Request, id: string): Promise<Response> { await authenticated(request, "products.read"); const latest = await store.latestPublishJob(); return json(latest ? { ...latest, saved: true, published: latest.status === "success" } : { status: "none" }, 200, id); }
+  async function audit(request: Request, id: string): Promise<Response> {
+    await authenticated(request, "audit.read"); if (!store.listAudit) throw new AppError(503, "audit_not_configured", "Аудит не настроен");
+    const query = requestUrl(request).searchParams; const date = (name: string) => { const value = query.get(name); if (!value) return undefined; const parsed = Date.parse(value); return Number.isNaN(parsed) ? undefined : parsed; };
+    return json(await store.listAudit({ user: query.get("user")?.trim() || undefined, action: query.get("action")?.trim() || undefined, entity: query.get("entity")?.trim() || undefined, outcome: query.get("outcome")?.trim() || undefined, from: date("from"), to: date("to"), limit: Number(query.get("limit") ?? 100) }), 200, id);
+  }
 
   function requestUrl(request: Request): URL { return new URL(request.url); }
 
@@ -386,6 +390,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
         else if (request.method === "POST" && /^\/api\/admin\/variants\/[^/]+\/inventory$/u.test(path)) response = await adjustInventory(request, id, decodeURIComponent(path.split("/")[4] ?? ""));
         else if (request.method === "GET" && /^\/api\/admin\/publish\/[0-9a-f]{7,64}$/iu.test(path)) response = await publishStatus(request, id, path.split("/").at(-1) ?? "");
         else if (request.method === "GET" && path === "/api/admin/deployment/latest") response = await latestDeployment(request, id);
+        else if (request.method === "GET" && path === "/api/admin/audit") response = await audit(request, id);
         else throw new AppError(404, "not_found", "Маршрут не найден");
         return addCors(response, origin);
       } catch (error) {
