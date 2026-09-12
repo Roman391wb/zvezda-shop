@@ -866,7 +866,18 @@
       "collections": [
         "codex-e2e-1789248907261-collection"
       ],
-      "media": [],
+      "media": [
+        {
+          "id": "bad766f4-632b-465c-99c7-b6f351c11625",
+          "type": "image",
+          "url": "/uploads/bad766f4-632b-465c-99c7-b6f351c11625.png",
+          "alt_text": "E2E",
+          "sort_order": 0,
+          "is_primary": true,
+          "is_secondary": false,
+          "variant_id": null
+        }
+      ],
       "variants": [
         {
           "id": "567d6879-10a3-419b-9d05-6980c70d4e7d",
@@ -885,7 +896,8 @@
           "name": "test",
           "value": "staging"
         }
-      ]
+      ],
+      "cardImage": "/uploads/bad766f4-632b-465c-99c7-b6f351c11625.png"
     }
   ]
 }
