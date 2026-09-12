@@ -33,7 +33,7 @@ describe("GitHubWriter", () => {
 
   it("maps GitHub auth, rate limit, availability, stale branch and ref conflicts without exposing the installation token", async () => {
     const cfg = await config();
-    await expect(new GitHubWriter(cfg, async () => new Response("forbidden", { status: 403 })).readByKey("products")).rejects.toMatchObject({ code: "github_auth_error" });
+    await expect(new GitHubWriter(cfg, async () => new Response("forbidden", { status: 403 })).readByKey("products")).rejects.toMatchObject({ code: "github_forbidden" });
     await expect(new GitHubWriter(cfg, async () => { throw new Error("network"); }).readByKey("products")).rejects.toMatchObject({ code: "github_unavailable" });
     let rateCall = 0; const rate = new GitHubWriter(cfg, async () => { rateCall += 1; return rateCall === 1 ? installation() : new Response("slow", { status: 429, headers: { "X-RateLimit-Remaining": "0" } }); });
     await expect(rate.readByKey("products")).rejects.toMatchObject({ code: "github_rate_limited" });

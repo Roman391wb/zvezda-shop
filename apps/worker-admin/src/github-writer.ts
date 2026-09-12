@@ -1,6 +1,7 @@
 import type { Config } from "./config";
 import { AppError } from "./errors";
 import { GitHubAppAuth } from "./github-app-auth";
+import { assertGitHubResponse, githubFetch, githubHeaders } from "./github-api";
 import { CONTENT_PATHS, UPLOADS_PREFIX, type ContentKey, type ContentPath, type GitCommitChange, type GitCommitResult, type GitHubDocument, type GitUploadAsset, type UploadPath, type WritePath } from "./types";
 
 const decoder = new TextDecoder();
@@ -140,13 +141,11 @@ export class GitHubWriter implements GitWriterPort {
 
   private async api(path: string, init: RequestInit = {}): Promise<Response> {
     const token = await this.auth.installationToken();
-    let response: Response;
-    try { response = await this.requestFetch(`https://api.github.com${path}`, { ...init, headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${token}`, "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json", ...init.headers } }); }
-    catch { throw new AppError(503, "github_unavailable", "GitHub временно недоступен"); }
-    if (response.status === 401 || response.status === 403) throw new AppError(502, "github_auth_error", "GitHub App не авторизован");
+    const url = `https://api.github.com${path}`;
+    const response = await githubFetch(this.requestFetch, "repository_api", url, { ...init, headers: githubHeaders(token, { "Content-Type": "application/json", ...init.headers }) });
     if (response.status === 409 || response.status === 422 && path.includes("/git/refs/")) throw new AppError(409, "github_ref_conflict", "GitHub branch изменился");
     if (response.status === 429 || response.headers.get("X-RateLimit-Remaining") === "0") throw new AppError(503, "github_rate_limited", "GitHub rate limit исчерпан");
-    if (!response.ok) throw new AppError(503, "github_unavailable", "GitHub API временно недоступен");
+    assertGitHubResponse(response, "repository_api");
     return response;
   }
 

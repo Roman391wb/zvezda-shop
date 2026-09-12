@@ -22,7 +22,7 @@ describe("GitHubReader", () => {
 
   it("maps GitHub authentication and availability failures", async () => {
     const forbidden = new GitHubReader(config, async () => new Response("forbidden", { status: 403 }), { installationToken: async () => "installation-token" });
-    await expect(forbidden.readByKey("settings")).rejects.toMatchObject({ status: 502, code: "github_auth_error" });
+    await expect(forbidden.readByKey("settings")).rejects.toMatchObject({ status: 502, code: "github_forbidden" });
     const unavailable = new GitHubReader(config, async () => { throw new Error("network unavailable"); }, { installationToken: async () => "installation-token" });
     await expect(unavailable.readByKey("settings")).rejects.toMatchObject({ status: 503, code: "github_unavailable" });
   });

@@ -1,6 +1,7 @@
 import type { Config } from "./config";
 import { toBase64Url } from "./crypto";
 import { AppError } from "./errors";
+import { assertGitHubResponse, githubFetch, githubHeaders } from "./github-api";
 
 const encoder = new TextEncoder();
 
@@ -25,19 +26,22 @@ export class GitHubAppAuth implements GitHubTokenProvider {
     const privateKey = this.config.githubAppPrivateKey;
     if (!appId || !installationId || !privateKey) throw new AppError(503, "github_app_not_configured", "GitHub App не настроен");
     const jwt = await this.appJwt(appId, privateKey);
-    let response: Response;
-    try {
-      response = await this.requestFetch(`https://api.github.com/app/installations/${encodeURIComponent(installationId)}/access_tokens`, {
-        method: "POST",
-        headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${jwt}`, "X-GitHub-Api-Version": "2022-11-28" }
-      });
-    } catch { throw new AppError(503, "github_unavailable", "GitHub временно недоступен"); }
-    if (response.status === 401 || response.status === 403) throw new AppError(502, "github_auth_error", "GitHub App не авторизован");
-    if (!response.ok) throw new AppError(503, "github_unavailable", "Не удалось получить GitHub installation token");
-    const payload = await response.json() as { token?: string; expires_at?: string };
-    if (!payload.token || !payload.expires_at || Number.isNaN(Date.parse(payload.expires_at))) throw new AppError(502, "github_invalid_response", "Некорректный ответ GitHub");
+    const payload = await this.issueToken(jwt, installationId, "access_token");
     this.token = { value: payload.token, expiresAt: Date.parse(payload.expires_at) };
     return this.token.value;
+  }
+
+  private async issueToken(jwt: string, installationId: string, stage: string): Promise<{ token: string; expires_at: string }> {
+    const url = `https://api.github.com/app/installations/${encodeURIComponent(installationId)}/access_tokens`;
+    const response = await githubFetch(this.requestFetch, stage, url, { method: "POST", headers: githubHeaders(jwt) });
+    assertGitHubResponse(response, stage);
+    let payload: { token?: unknown; expires_at?: unknown };
+    try { payload = await response.json() as { token?: unknown; expires_at?: unknown }; }
+    catch { throw new AppError(502, "github_provider_error", `${stage}: GitHub вернул некорректный JSON`); }
+    if (typeof payload.token !== "string" || !payload.token || typeof payload.expires_at !== "string" || Number.isNaN(Date.parse(payload.expires_at))) {
+      throw new AppError(502, "github_provider_error", `${stage}: GitHub не вернул корректный installation token`);
+    }
+    return { token: payload.token, expires_at: payload.expires_at };
   }
 
   private async appJwt(appId: string, privateKey: string): Promise<string> {
@@ -48,8 +52,12 @@ export class GitHubAppAuth implements GitHubTokenProvider {
     let key: CryptoKey;
     try {
       key = await crypto.subtle.importKey("pkcs8", decodeBase64(pem).buffer as ArrayBuffer, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["sign"]);
-    } catch { throw new AppError(503, "github_app_not_configured", "Некорректный private key GitHub App"); }
+    } catch (error) {
+      console.info(JSON.stringify({ event: "github.stage", stage: "app_jwt", http_status: null, response_classification: "local_error", error_name: error instanceof Error ? error.name : "unknown", safe_error_message: "Не удалось импортировать private key" }));
+      throw new AppError(503, "github_app_not_configured", "Некорректный private key GitHub App");
+    }
     const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, encoder.encode(`${header}.${payload}`));
+    console.info(JSON.stringify({ event: "github.stage", stage: "app_jwt", http_status: null, response_classification: "success" }));
     return `${header}.${payload}.${toBase64Url(new Uint8Array(signature))}`;
   }
 }
