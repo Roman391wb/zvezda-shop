@@ -13,7 +13,8 @@ export function json(value: unknown, status = 200, requestIdValue?: string, head
   result.set("Cache-Control", "no-store");
   result.set("X-Content-Type-Options", "nosniff");
   if (requestIdValue) result.set("X-Request-Id", requestIdValue);
-  return new Response(JSON.stringify(value), { status, headers: result });
+  const body = status === 204 || status === 205 || status === 304 ? null : JSON.stringify(value);
+  return new Response(body, { status, headers: result });
 }
 
 export function errorResponse(error: unknown, requestIdValue: string): Response {

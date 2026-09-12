@@ -13,7 +13,7 @@ For Phase 2.5, create only the staging D1 database `zvezda-admin-staging`, repla
 
 ## First ADMIN
 
-There is no registration route. After applying the migration, run `ADMIN_LOGIN=admin npm run bootstrap:admin` interactively. The helper emits a one-time SQL `INSERT` containing a password hash, never the plaintext password. Pipe or paste that statement directly into a controlled `wrangler d1 execute` session, then discard it.
+There is no registration route. After applying the migration, run `ADMIN_LOGIN=admin npm run bootstrap:admin` interactively. The helper emits a one-time SQL `INSERT` containing a versioned `scrypt-v1` password hash, never the plaintext password. Pipe or paste that statement directly into a controlled `wrangler d1 execute` session, then discard it. The Worker retains fail-closed parsing for legacy `pbkdf2-sha256-v1` records, but new staging credentials use scrypt.
 
 ## Commands
 

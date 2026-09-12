@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { AppError } from "../src/errors";
 import { createApp } from "../src/index";
-import type { PasswordHasher } from "../src/password";
+import { passwordHasher, type PasswordHasher } from "../src/password";
 import type { AdminStore, AuditInput, IdempotencyState, SessionInput } from "../src/store";
 import type { AdminSession, AdminUser, ContentKey, Env, GitHubDocument } from "../src/types";
 
@@ -92,6 +92,20 @@ describe("Admin v1 Worker Phase 1", () => {
     expect(store.auditEvents.at(-1)?.action).toBe("auth.login_success");
   });
 
+  it("creates a real session through the login endpoint with a stored scrypt hash", async () => {
+    const user = admin();
+    user.passwordHash = await passwordHasher.hash("Ziyarat-2026!endpoint");
+    user.passwordAlgorithm = passwordHasher.algorithm;
+    store = new MemoryStore(user);
+    const realApp = createApp(env, { store, reader, hasher: passwordHasher, config });
+    const valid = await realApp.fetch(request("/api/admin/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ login: "admin", password: "Ziyarat-2026!endpoint" }) }));
+    expect(valid.status).toBe(200);
+    expect(store.sessions.size).toBe(1);
+    expect(valid.headers.get("set-cookie")).toContain("HttpOnly");
+    const invalid = await realApp.fetch(request("/api/admin/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ login: "admin", password: "Ziyarat-2026!wrong" }) }));
+    expect(invalid.status).toBe(401);
+  });
+
   it("does not distinguish a bad password, missing user, or disabled user", async () => {
     expect((await login("admin", "wrong-pass")).response.status).toBe(401);
     expect((await login("missing", "wrong-pass")).response.status).toBe(401);
@@ -151,6 +165,10 @@ describe("Admin v1 Worker Phase 1", () => {
     expect(invalid.status).toBe(403); expect(invalid.headers.get("Access-Control-Allow-Origin")).toBeNull();
     const preflight = await app().fetch(new Request("https://admin-api.example.com/api/admin/products", { method: "OPTIONS", headers: { Origin: "https://evil.example", "Access-Control-Request-Method": "GET" } }));
     expect(preflight.status).toBe(403);
+    const allowed = await app().fetch(new Request("https://admin-api.example.com/api/admin/auth/login", { method: "OPTIONS", headers: { Origin: "https://shop.example.com", "Access-Control-Request-Method": "POST" } }));
+    expect(allowed.status).toBe(204);
+    expect(allowed.headers.get("Access-Control-Allow-Origin")).toBe("https://shop.example.com");
+    expect(allowed.headers.get("Access-Control-Allow-Credentials")).toBe("true");
   });
 
   it("has content writes disabled by default", async () => {
