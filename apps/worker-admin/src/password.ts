@@ -19,14 +19,14 @@ export interface PasswordHasher {
 
 export type PasswordVerificationStatus = "valid" | "malformed" | "mismatch" | "derive_failed";
 
-export async function verifyPassword(password: string, encoded: string): Promise<{ valid: boolean; status: PasswordVerificationStatus }> {
+export async function verifyPassword(password: string, encoded: string): Promise<{ valid: boolean; status: PasswordVerificationStatus; errorName?: string }> {
   const parsed = parsePasswordHash(encoded);
   if (!parsed) return { valid: false, status: "malformed" };
   try {
     const valid = constantTimeEqualBytes(await derive(password, parsed.salt, parsed.iterations), parsed.derived);
     return { valid, status: valid ? "valid" : "mismatch" };
-  } catch {
-    return { valid: false, status: "derive_failed" };
+  } catch (error) {
+    return { valid: false, status: "derive_failed", errorName: error instanceof Error ? error.name : "unknown" };
   }
 }
 

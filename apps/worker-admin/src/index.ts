@@ -181,7 +181,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
     const verification = user?.isActive && hasher === passwordHasher ? await verifyPassword(password, user.passwordHash) : null;
     const valid = user ? user.isActive && (verification?.valid ?? await hasher.verify(password, user.passwordHash)) : false;
     if (!valid || !user) {
-      await store.audit({ action: "auth.login_failure", requestId: id, ipHash, metadata: { reason: "invalid_credentials", login_hash: await sha256(login), password_verification: verification?.status } });
+      await store.audit({ action: "auth.login_failure", requestId: id, ipHash, metadata: { reason: "invalid_credentials", login_hash: await sha256(login), password_verification: verification?.status, password_verification_error: verification?.errorName } });
       throw new AppError(401, "invalid_credentials", "Неверный логин или пароль");
     }
     const created = await newSession(store, user.id, user.sessionVersion, request, config.ipHashPepper);
