@@ -205,7 +205,17 @@ export class ContentService {
     if (new Set(collectionSlugs).size !== collectionSlugs.length) throw new AppError(422, "invalid_collection", "Коллекции не должны повторяться");
     const status = payload.status ?? existing?.status ?? "draft"; if (typeof status !== "string" || !productStatuses.has(status)) throw new AppError(422, "validation_error", "Некорректный status");
     const variants = this.normalVariants(payload.variants ?? existing?.variants ?? []); const media = this.normalMedia(payload.media ?? existing?.media ?? []); const attributes = this.normalAttributes(payload.attributes ?? existing?.attributes ?? []); const cardImage = payload.cardImage ?? payload.card_image ?? existing?.cardImage ?? null;
-    return { id: existing?.id ?? crypto.randomUUID(), name, article: optionalString(payload.article ?? existing?.article, "article", 80), cardImage: cardImage === null || cardImage === "" ? undefined : url(cardImage), slug: productSlug, short_description: string(payload.short_description ?? existing?.short_description, "short_description", 2, 300), description: string(payload.description ?? existing?.description, "description", 2, 10_000), category: category.name, category_slug: category.slug, price, compare_at_price: compare === null ? null : integer(compare, "compare_at_price", 1, 1_000_000_000), currency: "RUB", status, is_featured: boolean(payload.is_featured, existing?.is_featured === true), is_new: boolean(payload.is_new, existing?.is_new === true), collections: collectionSlugs, media, variants, attributes };
+    const result: JsonObject = { ...(existing ?? {}), id: existing?.id ?? crypto.randomUUID(), name, article: optionalString(payload.article ?? existing?.article, "article", 80), cardImage: cardImage === null || cardImage === "" ? undefined : url(cardImage), slug: productSlug, short_description: string(payload.short_description ?? existing?.short_description, "short_description", 2, 300), description: string(payload.description ?? existing?.description, "description", 2, 10_000), category: category.name, category_slug: category.slug, price, compare_at_price: compare === null ? null : integer(compare, "compare_at_price", 1, 1_000_000_000), currency: "RUB", status, is_featured: boolean(payload.is_featured, existing?.is_featured === true), is_new: boolean(payload.is_new, existing?.is_new === true), collections: collectionSlugs, media, variants, attributes };
+    if (existing) {
+      const specified = new Set(Object.keys(payload));
+      if (["cardImage", "card_image"].some((key) => key in payload)) specified.add("cardImage");
+      if (["category", "category_id", "category_slug"].some((key) => key in payload)) { specified.add("category"); specified.add("category_slug"); }
+      if (["collections", "collection_ids"].some((key) => key in payload)) specified.add("collections");
+      for (const key of Object.keys(result)) if (key !== "id" && !specified.has(key)) {
+        if (Object.hasOwn(existing, key)) result[key] = clone(existing[key]); else delete result[key];
+      }
+    }
+    return result;
   }
 
   private normalVariants(value: unknown): JsonObject[] {
