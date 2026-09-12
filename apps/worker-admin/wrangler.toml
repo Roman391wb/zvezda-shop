@@ -27,10 +27,9 @@ migrations_dir = "migrations"
 [env.staging]
 name = "zvezda-admin-api-staging"
 workers_dev = true
-# This branch is the sole real-write target for the Phase 2.5 integration gate.
-# Keep WRITES_ENABLED false in version control; enable it only for reviewed
-# live staging integration tests after the GitHub App and D1 are verified.
-vars = { ENVIRONMENT = "staging", ALLOWED_ORIGINS = "https://ziyarat-admin-staging.pages.dev", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "admin-staging", WRITES_ENABLED = "true" }
+# This branch is the sole real-write target for reviewed staging integration.
+# Keep writes disabled between explicitly approved test windows.
+vars = { ENVIRONMENT = "staging", ALLOWED_ORIGINS = "https://ziyarat-admin-staging.pages.dev", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "admin-staging", WRITES_ENABLED = "false" }
 
 [[env.staging.d1_databases]]
 binding = "DB"
