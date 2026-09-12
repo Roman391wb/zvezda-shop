@@ -31,14 +31,6 @@
       "media_url": null,
       "sort_order": 3,
       "is_visible": true
-    },
-    {
-      "name": "E2E коллекция изменена",
-      "slug": "codex-e2e-1789248301386-collection",
-      "description": "Временная staging коллекция",
-      "media_url": null,
-      "sort_order": 102,
-      "is_visible": true
     }
   ]
 }
