@@ -866,18 +866,7 @@
       "collections": [
         "codex-e2e-1789248577175-collection"
       ],
-      "media": [
-        {
-          "id": "0b61a5d7-073d-4b19-9bc8-d4bf6aecaea7",
-          "type": "image",
-          "url": "/uploads/0b61a5d7-073d-4b19-9bc8-d4bf6aecaea7.png",
-          "alt_text": "E2E",
-          "sort_order": 0,
-          "is_primary": true,
-          "is_secondary": false,
-          "variant_id": null
-        }
-      ],
+      "media": [],
       "variants": [
         {
           "id": "b77c5b8b-9e4d-417a-93f8-552f4a86280c",
