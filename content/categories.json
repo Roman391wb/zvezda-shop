@@ -39,6 +39,14 @@
       "media_url": null,
       "sort_order": 4,
       "is_visible": true
+    },
+    {
+      "name": "E2E категория",
+      "slug": "codex-e2e-1789248155916-category",
+      "description": "Временная staging категория",
+      "media_url": null,
+      "sort_order": 100,
+      "is_visible": true
     }
   ]
 }
