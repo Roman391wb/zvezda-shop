@@ -203,7 +203,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
       const headers = new Headers();
       headers.append("Set-Cookie", expiredApiCookie(secure));
       headers.append("Set-Cookie", expiredCsrfCookie(secure));
-      return json({ authenticated: false }, 200, id, headers);
+      return json({ error: { code: error.code, detail: error.detail }, authenticated: false, request_id: id }, 401, id, headers);
     }
   }
 

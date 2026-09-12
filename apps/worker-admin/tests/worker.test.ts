@@ -137,6 +137,13 @@ describe("Admin v1 Worker Phase 1", () => {
     const loggedIn = await login(); const loginBody = await loggedIn.response.clone().json() as { csrf_token: string };
     const logout = await app().fetch(request("/api/admin/auth/logout", { method: "POST", headers: { Cookie: loggedIn.cookie, Origin: "https://shop.example.com", "X-CSRF-Token": loginBody.csrf_token } }));
     expect(logout.status).toBe(200); expect(store.auditEvents.at(-1)?.action).toBe("auth.logout");
+    expect([...store.sessions.values()][0]?.revokedAt).not.toBeNull();
+    const cleared = logout.headers.get("set-cookie") ?? "";
+    expect(cleared).toContain("za_admin_session=; Path=/api/admin; HttpOnly; SameSite=Strict; Max-Age=0; Secure");
+    expect(cleared).toContain("za_admin_csrf=; Path=/api/admin; SameSite=Strict; Max-Age=0; Secure");
+    const loggedOutMe = await app().fetch(request("/api/admin/auth/me", { headers: { Cookie: loggedIn.cookie, Origin: "https://shop.example.com" } }));
+    expect(loggedOutMe.status).toBe(401);
+    expect((await loggedOutMe.json() as { authenticated: boolean }).authenticated).toBe(false);
     const secondLogin = await login(); const secondBody = await secondLogin.response.clone().json() as { csrf_token: string };
     const changed = await app().fetch(request("/api/admin/auth/password/change", { method: "POST", headers: { Cookie: secondLogin.cookie, Origin: "https://shop.example.com", "X-CSRF-Token": secondBody.csrf_token, "Content-Type": "application/json" }, body: JSON.stringify({ current_password: "correct-password", new_password: "new-password" }) }));
     expect(changed.status).toBe(200); expect(store.auditEvents.at(-1)?.action).toBe("auth.password_changed");
