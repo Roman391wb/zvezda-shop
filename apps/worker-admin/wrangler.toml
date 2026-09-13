@@ -39,7 +39,7 @@ migrations_dir = "migrations"
 [env.production]
 name = "zvezda-admin-api-production"
 workers_dev = true
-vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://ziyarat-admin.pages.dev", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "main", WRITES_ENABLED = "false" }
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://ziyarat-admin.pages.dev,https://zvezda-admin-api-production.romankurbanov391.workers.dev", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "main", WRITES_ENABLED = "false" }
 
 [env.production.assets]
 directory = "../admin/dist"
