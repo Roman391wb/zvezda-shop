@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Config } from "../src/config";
 import { AppError } from "../src/errors";
-import { GitHubWriter } from "../src/github-writer";
+import { GitHubWriter, publicImagePath } from "../src/github-writer";
 import { CONTENT_PATHS } from "../src/types";
 
 const encoder = new TextEncoder();
@@ -13,6 +13,11 @@ const config = async (): Promise<Config> => {
 const installation = () => new Response(JSON.stringify({ token: "installation-token-not-returned", expires_at: "2030-01-01T00:00:00Z" }));
 
 describe("GitHubWriter", () => {
+  it("allows only controlled storefront image paths for Admin previews", () => {
+    expect(publicImagePath("/images/dress-studio.jpg")).toBe("apps/web/public/images/dress-studio.jpg");
+    expect(publicImagePath("/uploads/22222222-2222-4222-8222-222222222222.webp")).toBe("apps/web/public/uploads/22222222-2222-4222-8222-222222222222.webp");
+    for (const value of ["https://evil.example/x.jpg", "/images/../secret.jpg", "/content/products.json", "/uploads/not-a-uuid.jpg", "/images/file.svg"]) expect(() => publicImagePath(value)).toThrow();
+  });
   it("uses the Git data API and explicitly performs a non-force ref update", async () => {
     const requests: { url: string; init?: RequestInit }[] = [];
     const writer = new GitHubWriter(await config(), async (url, init) => {

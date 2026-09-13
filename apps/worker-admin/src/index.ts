@@ -192,13 +192,13 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
     const headers = new Headers();
     headers.append("Set-Cookie", apiCookie(created.cookieValue, secure));
     headers.append("Set-Cookie", csrfCookie(created.csrfToken, secure));
-    return json({ authenticated: true, login: user.displayLogin, role: user.role, permissions: permissionsFor(user.role), csrf_token: created.csrfToken }, 200, id, headers);
+    return json({ authenticated: true, login: user.displayLogin, role: user.role, permissions: permissionsFor(user.role), csrf_token: created.csrfToken, writes_enabled: config.writesEnabled }, 200, id, headers);
   }
 
   async function me(request: Request, id: string): Promise<Response> {
     try {
       const current = await authenticated(request);
-      return json({ authenticated: true, login: current.user.displayLogin, role: current.user.role, permissions: permissionsFor(current.user.role), csrf_token: current.csrfToken || undefined }, 200, id);
+      return json({ authenticated: true, login: current.user.displayLogin, role: current.user.role, permissions: permissionsFor(current.user.role), csrf_token: current.csrfToken || undefined, writes_enabled: config.writesEnabled }, 200, id);
     } catch (error) {
       if (!(error instanceof AppError) || error.status !== 401) throw error;
       const headers = new Headers();
@@ -265,6 +265,12 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
     return json(filtered, 200, id, { ETag: `"${document.sha}"` });
   }
 
+  async function adminWorkspace(request: Request, id: string): Promise<Response> {
+    await authenticated(request, "products.read");
+    const productId = requestUrl(request).searchParams.get("id")?.trim() || undefined;
+    return json(await content.adminWorkspace(productId), 200, id);
+  }
+
   async function taxonomy(request: Request, id: string, key: "categories" | "collections"): Promise<Response> {
     await authenticated(request, "catalog.manage");
     const document = await reader.readByKey(key); return json(toTaxonomyResponse(contentArray(document.value, key)), 200, id, { ETag: `"${document.sha}"` });
@@ -326,6 +332,15 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
     const [items, head] = await Promise.all([content.listMedia(), writer.head()]);
     return json(items, 200, id, { ETag: `"${head}"` });
   }
+  async function previewMedia(request: Request, id: string): Promise<Response> {
+    await authenticated(request, "products.read");
+    const canonicalUrl = requestUrl(request).searchParams.get("url") ?? "";
+    const bytes = await writer.readPublicImage(canonicalUrl);
+    const kind = validateImage(bytes);
+    const body = new ArrayBuffer(bytes.byteLength);
+    new Uint8Array(body).set(bytes);
+    return new Response(body, { status: 200, headers: { "Content-Type": kind.mime, "Content-Length": String(bytes.byteLength), "Cache-Control": "private, max-age=300", "X-Content-Type-Options": "nosniff", "X-Request-Id": id } });
+  }
   async function uploadMedia(request: Request, id: string): Promise<Response> {
     const raw = new Uint8Array(await request.clone().arrayBuffer()); const form = await request.formData(); const candidate = form.get("file");
     if (!(candidate instanceof File)) throw new AppError(422, "validation_error", "Требуется файл изображения");
@@ -359,6 +374,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
         else if (request.method === "GET" && path === "/api/admin/auth/me") response = await me(request, id);
         else if (request.method === "POST" && path === "/api/admin/auth/password/change") response = await changePassword(request, id);
         else if (request.method === "GET" && path === "/api/admin/dashboard") response = await dashboard(request, id);
+        else if (request.method === "GET" && path === "/api/admin/workspace") response = await adminWorkspace(request, id);
         else if (request.method === "GET" && path === "/api/admin/products") response = await products(request, id);
         else if (request.method === "POST" && path === "/api/admin/products") response = await createProduct(request, id);
         else if (request.method === "POST" && /^\/api\/admin\/products\/[^/]+\/preview$/u.test(path)) response = await previewProduct(request, id, decodeURIComponent(path.split("/")[4] ?? ""));
@@ -385,6 +401,7 @@ export function createApp(env: Env, dependencies: AppDependencies = {}): AdminWo
         else if (request.method === "PUT" && /^\/api\/admin\/users\/[^/]+$/u.test(path)) response = await updateUser(request, id, decodeURIComponent(path.split("/").at(-1) ?? ""));
         else if (request.method === "POST" && /^\/api\/admin\/users\/[^/]+\/revoke-sessions$/u.test(path)) response = await revokeUserSessions(request, id, decodeURIComponent(path.split("/")[4] ?? ""));
         else if (request.method === "GET" && path === "/api/admin/media") response = await media(request, id);
+        else if (request.method === "GET" && path === "/api/admin/media/preview") response = await previewMedia(request, id);
         else if (request.method === "POST" && path === "/api/admin/media") response = await uploadMedia(request, id);
         else if (request.method === "PATCH" && /^\/api\/admin\/media\/[0-9a-f-]{36}$/iu.test(path)) response = await patchMedia(request, id, path.split("/").at(-1) ?? "");
         else if (request.method === "DELETE" && /^\/api\/admin\/media\/[0-9a-f-]{36}$/iu.test(path)) response = await deleteMedia(request, id, path.split("/").at(-1) ?? "");

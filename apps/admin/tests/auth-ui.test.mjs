@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { AUTH_STATE, applyAuthState, loginErrorMessage, setLoginPending } from "../public/auth-state.mjs";
-import { localizedLabel } from "../public/ui-localization.mjs";
+import { actionLabel, roleLabel, sectionLabel, statusLabel } from "../public/admin-domain.mjs";
 
 const nodes = () => ({ checking: { hidden: false }, login: { hidden: false }, app: { hidden: false } });
 
@@ -35,12 +35,11 @@ test("hidden state has an author-level display override", async () => {
   assert.match(css, /\[hidden\]\s*\{\s*display:\s*none\s*!important/);
 });
 
-test("user-facing Admin labels are localized without changing technical values", () => {
-  assert.equal(localizedLabel("published"), "Опубликован");
-  assert.equal(localizedLabel("Variants JSON"), "Варианты (технический формат JSON)");
-  assert.equal(localizedLabel("auth.login_success"), "Успешный вход");
-  assert.equal(localizedLabel("unknown.action"), "Системное действие (unknown.action)");
-  assert.equal(localizedLabel("Администратор · ADMIN"), "Администратор · Администратор");
-  assert.equal(localizedLabel("скрывает storefront"), "скрывает витрину магазина");
-  assert.equal(localizedLabel("sku-001"), "sku-001");
+test("user-facing Admin labels are rendered explicitly without changing technical values", () => {
+  assert.equal(statusLabel("published"), "Опубликован");
+  assert.equal(sectionLabel("hero"), "Главный баннер");
+  assert.equal(sectionLabel("featured"), "Популярные товары");
+  assert.equal(actionLabel("auth.login_success"), "Успешный вход");
+  assert.equal(actionLabel("unknown.action"), "Системное действие (unknown.action)");
+  assert.equal(roleLabel("ADMIN"), "Администратор");
 });

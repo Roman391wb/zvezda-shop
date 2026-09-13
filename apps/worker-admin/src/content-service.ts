@@ -166,7 +166,27 @@ export class ContentService {
   async listMedia(): Promise<(GitUploadAsset & { references: string[] })[]> {
     const [assets, products, categories, collections, homepage, settings] = await Promise.all([this.writer.listUploads(), this.writer.readByKey("products"), this.writer.readByKey("categories"), this.writer.readByKey("collections"), this.writer.readByKey("homepage"), this.writer.readByKey("settings")]);
     const documents = [products.value, categories.value, collections.value, homepage.value, settings.value];
-    return assets.map((asset) => ({ ...asset, references: documents.flatMap((document, index) => this.references(document, asset.url, ["products", "categories", "collections", "homepage", "settings"][index])) }));
+    return this.mediaWithReferences(assets, documents);
+  }
+
+  async adminWorkspace(id?: string): Promise<Record<string, unknown>> {
+    const [assets, products, categories, collections, homepage, settings, head] = await Promise.all([
+      this.writer.listUploads(), this.writer.readByKey("products"), this.writer.readByKey("categories"),
+      this.writer.readByKey("collections"), this.writer.readByKey("homepage"), this.writer.readByKey("settings"), this.writer.head()
+    ]);
+    const productRows = array(object(products.value).products, "Некорректный products.json");
+    const product = id ? productRows.find((item) => item.id === id) : null;
+    if (id && !product) throw new AppError(404, "product_not_found", "Товар не найден");
+    const documents = [products.value, categories.value, collections.value, homepage.value, settings.value];
+    return {
+      product: product ? clone(product) : null,
+      products: clone(productRows),
+      categories: clone(array(object(categories.value).categories)),
+      collections: clone(array(object(collections.value).collections)),
+      homepage: clone(array(object(homepage.value).sections)),
+      media: this.mediaWithReferences(assets, documents),
+      revisions: { products: products.sha, media: head }
+    };
   }
 
   async uploadMedia(bytes: Uint8Array, extension: "jpg" | "png" | "webp", expectedHead: string, actor: MutationActor): Promise<MutationResult & { id: string; url: string; type: "image" }> {
@@ -196,6 +216,11 @@ export class ContentService {
     return this.commitFiles([{ path: asset.path, bytes: null }], `admin: delete image ${id}`, expectedHead, actor, { action: "media.deleted", targetType: "media", targetId: id, before: { path: asset.path }, after: null });
   }
 
+  private mediaWithReferences(assets: GitUploadAsset[], documents: unknown[]): (GitUploadAsset & { references: string[] })[] {
+    const labels = ["products", "categories", "collections", "homepage", "settings"];
+    return assets.map((asset) => ({ ...asset, references: documents.flatMap((document, index) => this.references(document, asset.url, labels[index])) }));
+  }
+
   private normalProduct(input: unknown, existing: JsonObject | undefined, categories: JsonObject[], collections: JsonObject[]): JsonObject {
     const payload = object(input); const name = string(payload.name ?? existing?.name, "name", 2, 180); const productSlug = slug(payload.slug ?? existing?.slug); const price = integer(payload.price ?? existing?.price, "price", 1, 1_000_000_000); const compare = payload.compare_at_price === null ? null : payload.compare_at_price ?? existing?.compare_at_price ?? null;
     if (compare !== null && integer(compare, "compare_at_price", 1, 1_000_000_000) <= price) throw new AppError(422, "validation_error", "Старая цена должна быть больше текущей");
@@ -221,10 +246,10 @@ export class ContentService {
 
   private normalVariants(value: unknown): JsonObject[] {
     const variants = array(value, "Некорректные варианты"); if (variants.length > 60) throw new AppError(422, "validation_error", "Слишком много вариантов");
-    return variants.map((variant) => { const options = object(variant.options ?? {}); const size = string(variant.size ?? options.size, "size", 1, 40); const color = optionalString(variant.color ?? options.color, "color", 60) ?? ""; return { id: variant.id ?? crypto.randomUUID(), sku: optionalString(variant.sku, "sku", 80) ?? "", options: { size, color }, stock_quantity: integer(variant.stock_quantity ?? 0, "stock_quantity", 0, 100_000), is_active: boolean(variant.is_active, true), media: Array.isArray(variant.media) ? variant.media : [] }; });
+    return variants.map((variant) => { const options = object(variant.options ?? {}); const size = string(variant.size ?? options.size, "size", 1, 40); const color = optionalString(variant.color ?? options.color, "color", 60) ?? ""; return { ...variant, id: variant.id ?? crypto.randomUUID(), sku: optionalString(variant.sku, "sku", 80) ?? "", options: { ...options, size, color }, stock_quantity: integer(variant.stock_quantity ?? 0, "stock_quantity", 0, 100_000), is_active: boolean(variant.is_active, true), media: Array.isArray(variant.media) ? variant.media : [] }; });
   }
-  private normalMedia(value: unknown): JsonObject[] { return array(value, "Некорректная media").map((media, index) => ({ id: media.id ?? crypto.randomUUID(), type: "image", url: url(media.url), alt_text: optionalString(media.alt_text, "alt_text", 240) ?? "", sort_order: integer(media.sort_order ?? index, "sort_order", 0, 10_000), is_primary: boolean(media.is_primary, index === 0), is_secondary: boolean(media.is_secondary, false), variant_id: media.variant_id ?? null })); }
-  private normalAttributes(value: unknown): JsonObject[] { return array(value, "Некорректные attributes").map((attribute) => ({ name: string(attribute.name, "attribute name", 1, 100), value: string(attribute.value, "attribute value", 1, 240) })); }
+  private normalMedia(value: unknown): JsonObject[] { return array(value, "Некорректная media").map((media, index) => ({ ...media, id: media.id ?? crypto.randomUUID(), type: "image", url: url(media.url), alt_text: optionalString(media.alt_text, "alt_text", 240) ?? "", sort_order: integer(media.sort_order ?? index, "sort_order", 0, 10_000), is_primary: boolean(media.is_primary, index === 0), is_secondary: boolean(media.is_secondary, false), variant_id: media.variant_id ?? null })); }
+  private normalAttributes(value: unknown): JsonObject[] { return array(value, "Некорректные attributes").map((attribute) => ({ ...attribute, name: string(attribute.name, "attribute name", 1, 100), value: string(attribute.value, "attribute value", 1, 240) })); }
   private normalTaxonomy(input: unknown, existing?: JsonObject): JsonObject { const payload = object(input); const media = payload.media_url ?? existing?.media_url ?? null; return { name: string(payload.name ?? existing?.name, "name", 2, 120), slug: slug(payload.slug ?? existing?.slug), description: optionalString(payload.description ?? existing?.description, "description", 1000), media_url: media === null || media === "" ? null : url(media), sort_order: integer(payload.sort_order ?? existing?.sort_order ?? 0, "sort_order", 0, 10_000), is_visible: boolean(payload.is_visible ?? payload.is_active, existing?.is_visible !== false) }; }
 
   private async ensureTaxonomyUnused(kind: "categories" | "collections", id: string): Promise<void> {
