@@ -15,6 +15,7 @@ export interface GitWriterPort {
   listUploads(): Promise<GitUploadAsset[]>;
   workflowForCommit(commitSha: string): Promise<{ status: string; conclusion: string | null; url: string | null } | null>;
   history(key: ContentKey): Promise<{ sha: string; message: string; createdAt: string }[]>;
+  readPublicImage(url: string): Promise<Uint8Array>;
 }
 
 function isUploadPath(path: string): path is UploadPath {
@@ -23,6 +24,14 @@ function isUploadPath(path: string): path is UploadPath {
 
 export function assertWritePath(path: string): asserts path is WritePath {
   if (!contentPathSet.has(path) && !isUploadPath(path)) throw new AppError(403, "path_not_allowed", "Этот Git path не разрешён");
+}
+
+export function publicImagePath(url: string): string {
+  if (typeof url !== "string" || url.includes("\\") || url.includes("..") || url.includes("?") || url.includes("#")) throw new AppError(422, "invalid_media_path", "Недопустимый путь изображения");
+  const uploads = /^\/uploads\/[0-9a-f-]{36}\.(?:jpg|png|webp)$/iu;
+  const images = /^\/images\/(?:[A-Za-z0-9][A-Za-z0-9._-]*\/)*[A-Za-z0-9][A-Za-z0-9._-]*\.(?:jpe?g|png|webp)$/u;
+  if (!uploads.test(url) && !images.test(url)) throw new AppError(422, "invalid_media_path", "Разрешены только изображения магазина");
+  return `apps/web/public${url}`;
 }
 
 function base64(bytes: Uint8Array): string {
@@ -117,6 +126,22 @@ export class GitHubWriter implements GitWriterPort {
     const response = await this.api(`/repos/${this.repository()}/commits?path=${encodeURIComponent(CONTENT_PATHS[key])}&sha=${encodeURIComponent(this.config.githubRef)}&per_page=30`);
     const payload = await response.json() as { sha?: string; commit?: { message?: string; author?: { date?: string } } }[];
     return payload.flatMap((item) => item.sha && item.commit?.message && item.commit.author?.date ? [{ sha: item.sha, message: item.commit.message, createdAt: item.commit.author.date }] : []);
+  }
+
+  async readPublicImage(url: string): Promise<Uint8Array> {
+    const path = publicImagePath(url);
+    const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+    const response = await this.api(`/repos/${this.repository()}/contents/${encodedPath}?ref=${encodeURIComponent(this.config.githubRef)}`);
+    const payload = await response.json() as { content?: string; encoding?: string; sha?: string };
+    let encodedContent = payload.encoding === "base64" ? payload.content : undefined;
+    if (!encodedContent && payload.sha) {
+      const blobResponse = await this.api(`/repos/${this.repository()}/git/blobs/${encodeURIComponent(payload.sha)}`);
+      const blob = await blobResponse.json() as { content?: string; encoding?: string };
+      if (blob.encoding === "base64") encodedContent = blob.content;
+    }
+    if (!encodedContent) throw new AppError(502, "github_invalid_response", "GitHub не вернул изображение");
+    try { return decodeBase64(encodedContent); }
+    catch { throw new AppError(502, "github_invalid_response", "GitHub вернул повреждённое изображение"); }
   }
 
   private async readDocument(path: ContentPath, ref: string): Promise<GitHubDocument> {
