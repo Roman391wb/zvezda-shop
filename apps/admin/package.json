@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npx serve . -l 4174",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "test": "node tests/auth-ui.test.mjs"
   }
 }

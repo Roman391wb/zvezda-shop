@@ -1,0 +1,31 @@
+/* State gating must override the author display rules for .login and #app. */
+[hidden] { display: none !important; }
+
+.auth-checking {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.auth-checking-card {
+  display: grid;
+  gap: 15px;
+  justify-items: center;
+  padding: 32px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.auth-checking-card i {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: s .7s linear infinite;
+}
+
+#login-submit:disabled { cursor: wait; }
