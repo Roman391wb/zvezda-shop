@@ -37,9 +37,10 @@ test("hidden state has an author-level display override", async () => {
 
 test("user-facing Admin labels are localized without changing technical values", () => {
   assert.equal(localizedLabel("published"), "Опубликован");
-  assert.equal(localizedLabel("Variants JSON"), "Варианты");
+  assert.equal(localizedLabel("Variants JSON"), "Варианты (технический формат JSON)");
   assert.equal(localizedLabel("auth.login_success"), "Успешный вход");
   assert.equal(localizedLabel("unknown.action"), "Системное действие (unknown.action)");
   assert.equal(localizedLabel("Администратор · ADMIN"), "Администратор · Администратор");
+  assert.equal(localizedLabel("скрывает storefront"), "скрывает витрину магазина");
   assert.equal(localizedLabel("sku-001"), "sku-001");
 });
