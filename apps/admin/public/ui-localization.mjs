@@ -49,10 +49,3 @@ export function localizeUi(root) {
     if (localized !== element.getAttribute("placeholder")) element.setAttribute("placeholder", localized);
   }
 }
-
-export function observeUiLocalization(root) {
-  localizeUi(root);
-  const observer = new MutationObserver(() => localizeUi(root));
-  observer.observe(root, { childList: true, subtree: true, characterData: true });
-  return observer;
-}
