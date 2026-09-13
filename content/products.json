@@ -434,9 +434,9 @@
       "slug": "kostyum-samir",
       "short_description": "Свободный жакет и широкие брюки",
       "description": "Продуманный силуэт, созданный для свободы движения. Тактильная матовая ткань мягко ложится по фигуре и сохраняет форму в течение дня.",
-      "category": "Костюмы",
-      "category_slug": "kostyumy",
-      "price": 2199000,
+      "category": "Платья",
+      "category_slug": "platya",
+      "price": 3500,
       "compare_at_price": null,
       "currency": "RUB",
       "status": "published",
@@ -531,7 +531,9 @@
           "media": []
         }
       ],
-      "sort_order": 4
+      "sort_order": 4,
+      "article": "1069875",
+      "attributes": []
     },
     {
       "id": "285ff713-0857-4ef9-a601-a86e711e84cb",
