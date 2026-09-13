@@ -11,7 +11,7 @@
     "d1:migrate:local": "wrangler d1 migrations apply admin_v1 --local",
     "d1:migrate:development": "wrangler d1 migrations apply admin_v1 --env development",
     "d1:migrate:staging": "wrangler d1 migrations apply zvezda-admin-staging --remote --env staging",
-    "d1:migrate:production": "wrangler d1 migrations apply admin_v1 --env production",
+    "d1:migrate:production": "wrangler d1 migrations apply ziyarat-admin-production --remote --env production",
     "bootstrap:admin": "node scripts/bootstrap-admin.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests --max-warnings=0",
