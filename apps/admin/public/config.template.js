@@ -1,2 +1,2 @@
-// Deploy a copy as config.js. This is public configuration only: never place secrets here.
-window.ADMIN_CONFIG={apiBase:"https://zvezda-admin-api-production.romankurbanov391.workers.dev/api/admin"};
+// Same-origin Worker assets use this public configuration. Never place secrets here.
+window.ADMIN_CONFIG={apiBase:"/api/admin"};

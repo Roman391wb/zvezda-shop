@@ -41,6 +41,13 @@ name = "zvezda-admin-api-production"
 workers_dev = true
 vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://ziyarat-admin.pages.dev", GITHUB_OWNER = "Roman391wb", GITHUB_REPO = "zvezda-shop", GITHUB_REF = "main", WRITES_ENABLED = "false" }
 
+[env.production.assets]
+directory = "../admin/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# API routes must always execute Worker code, never fall back to index.html.
+run_worker_first = ["/api/*"]
+
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "ziyarat-admin-production"
